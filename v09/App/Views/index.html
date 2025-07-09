@@ -1,0 +1,40 @@
+{% set DomainUri = GetGlobals('DomainUri') %}
+{% set ChatIoUri = GetGlobals('ChatIoUri') %}
+<!DOCTYPE html>
+<html>
+<head>
+{% block head %}
+<title>portfolio</title>
+<meta charset="utf-8">
+<meta name="Generator" content="SaIlGong">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="{{DomainUri}}/source/css/XEIcon-2.2.0/xeicon.min.css">
+<link rel="stylesheet" href="{{DomainUri}}/source/css/jquery-confirm.min.css">
+<script src="{{DomainUri}}/source/js/jquery-3-2-1.min.js"></script>
+<script src="{{DomainUri}}/source/js/jquery-ui-1-10-3.min.js"></script>
+<script src="{{DomainUri}}/source/js/clipboard.min.js"></script>
+<script src="{{DomainUri}}/source/js/jquery-confirm.min.js"></script>
+<script src="{{DomainUri}}/source/js/toastr.min.js"></script>
+<script src="{{DomainUri}}/source/js/pChk.js?v={{ "now"|date("Y-m-d H:i:s") }};?>"></script>
+<script src="{{DomainUri}}/source/js/main.js?v={{ "now"|date("Y-m-d H:i:s") }}"></script>
+<script src="{{DomainUri}}/source/js/socket.io.js"></script>
+<script type="text/javascript">
+var DomainUri='{{GetGlobals('DomainUri')}}';
+</script>
+<script type="text/javascript" language="javascript" src="{{DomainUri}}/source/js/datatables.min.js"></script>
+<script src="{{DomainUri}}/source/js/nestable.js"></script>
+
+{% endblock %}
+{% block content %}
+{% endblock %}
+<script type="text/javascript">
+$(document).ready(function(){
+	var body = $('body');
+});
+</script>
+</body>
+</html>

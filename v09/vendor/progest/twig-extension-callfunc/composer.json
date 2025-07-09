@@ -1,0 +1,26 @@
+{
+	"name": "progest/twig-extension-callfunc",
+	"description": "Twig extension to call PHP functions or static methods from templates",
+	"keywords": ["twig", "function", "method", "static", "class"],
+	"require": {
+		"twig/twig": ">=2.4",
+		"php": ">=7.0"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/ProGestSA/twig-extension-callfunc",
+	"support": {
+		"issues": "https://github.com/ProGestSA/twig-extension-callfunc/issues",
+		"source": "https://github.com/ProGestSA/twig-extension-callfunc"
+	},
+	"authors": [
+		{
+			"name": "ProGest SA",
+			"email": "info@progest.ch"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"ProGest\\Twig\\": "src/"
+		}
+	}
+}
