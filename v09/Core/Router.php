@@ -18,7 +18,9 @@ class Router extends DefinAll
         $uri        = $getUriType['uri'];
         $routerType = $getUriType['routerType'];
 
-        print($uri);
+        if($uri){
+            $this->ManagerChk($routerType);
+        }
 
         $this->dispatch($getUriType); // 최종 라우터타기
     }
@@ -151,34 +153,19 @@ class Router extends DefinAll
     }
 
 
-    public static function GetLoginChk($routerType=null)
+    public static function ManagerChk($routerType=null)
     {
-        if(!$_GET['idx']){
+        if(!$_COOKIE['codeIDX']){
             static::goErrorPage($routerType);
         }
-        if(!$_COOKIE['chatCookie']){
-            static::goErrorPage($routerType);
-        }
-        $encidx        = $_GET['idx'];
-        $encKey        = self::encKey;
-        $loginKey      = self::LoginKey;
-        $getIDX        = Controller::Decrypt($encidx,$encKey);
-        $encryptCookie = $_COOKIE['chatCookie'];
-        $decrypt       = Controller::Decrypt($encryptCookie,$loginKey);
-        $decryptArr    = json_decode($decrypt,true);
-        $cookieIDX     = $decryptArr['idx'];
-        $cookieIp      = $decryptArr['ipAddress'];
         if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             static::goErrorPage($routerType);
         }
-        $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        $ip = $_SERVER['REMOTE_ADDR'];
-        if($getIDX!=$cookieIDX){
-            static::goErrorPage($routerType);
-        }
-        if($cookieIp!=$ip){
-            static::goErrorPage($routerType);
-        }
+
+        // $codeIDX                = $_COOKIE['codeIDX'];
+        // $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        // $ip                     = $_SERVER['REMOTE_ADDR'];
+        
         return ['result'=>'t'];
     }
 
