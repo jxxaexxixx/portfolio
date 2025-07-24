@@ -27,6 +27,7 @@ $pageArr=[
 
     ['chat', 'ClientCon','Render'],
     ['admin', 'AdminCon','Render'],
+    ['login', 'LoginCon','Render'],
     ['', 'MainCon','Render'],
 
 ];
