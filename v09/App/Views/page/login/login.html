@@ -176,9 +176,9 @@ $(document).ready(function(){
 				console.log(tmpArr);
 				var objResult = tmpArr.result;
 				if(objResult=="t"){
-					pAlert('{{DomainUri}}chat')
+					window.location.href = '{{DomainUri}}chat';
 				}else{
-
+					pAlert(tmpArr.msg)
 				}
 			pLoadingOff();
 		});

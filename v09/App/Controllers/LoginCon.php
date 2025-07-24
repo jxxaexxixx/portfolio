@@ -24,18 +24,16 @@ class LoginCon extends \Core\Controller
         $name = $_POST['name'];
         
         $clientChk = ClientMo::ClientNameChk($name);
-        print_r($clientChk);
-        exit;
         if ($clientChk) $this::errExport('중복된 닉네임입니다.');
 
-        // 채팅에 쓸 룸네임 발번
         
+        // 채팅에 쓸 룸네임 발번
         $rn = $this->MakeRandomString();
 
         // 매니저IDX 찾기
         $GlobalsValGroup = new \Core\GlobalsVariable;
         $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
-        
+
         // 디비 인서트
         $db     = static::GetMainDB();
         $dbName = self::MainDBName;
@@ -43,17 +41,20 @@ class LoginCon extends \Core\Controller
             (
                 name,
                 rn,
+                type,
                 manager_idx
             )
             VALUES
             (
                 :name,
                 :rn,
+                :type,
                 :manager_idx
             )
         ");
         $insert->bindValue(':name', $name);
         $insert->bindValue(':rn', $rn);
+        $insert->bindValue(':type', 2);
         $insert->bindValue(':manager_idx',  $managerIdx);
         $insert->execute();
         $chatIDX = $db->lastInsertId();

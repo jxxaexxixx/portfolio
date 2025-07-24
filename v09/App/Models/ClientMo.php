@@ -30,7 +30,10 @@ class ClientMo extends \Core\Model
         $db     = static::GetMainDB();
         $dbName = self::MainDBName;
         $Sel    = $db->prepare("SELECT
-            idx
+            idx,
+            rn,
+            type,
+            manager_idx
         FROM $dbName.client
         WHERE name = :name
         ");
