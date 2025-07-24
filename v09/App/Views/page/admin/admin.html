@@ -35,14 +35,14 @@ body{
 }
 
 .ad_le_wrap {
-  flex: 0 0 270px;
+  width: 270px;
   height: calc(100% - 45px);
   border: 2px solid var(--maincolor);
   border-radius: 15px;
 }
 
 .ad_ri_wrap {
-  flex: 1;
+	width: calc(100% - 280px);
   height: calc(100% - 45px);
   border: 2px solid var(--maincolor);
   border-radius: 15px;
@@ -81,10 +81,11 @@ body{
 	height: 100%;
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: initial;
+	padding-right: 8px;
 }
 .ad_chat_ri_top_box{
-    padding: 7px 0;
+    padding-top: 5px;
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
@@ -102,11 +103,26 @@ body{
 .ad_chat_ri_time_txt{
 	font-size: 10px;
 	color: #989898;
-	width: 65px;
+	min-width: 65px;
+	max-width: 65px;
 }
 .ad_chat_ri_txt{
-	font-size: 15px;
+	font-size: 14px;
 }
+
+.ad_chat_ri_bot_box{
+	width: 100%;
+}
+
+
+.ellipsis {
+	width: 100%; /* 부모 요소의 너비에 맞춤 */
+  white-space: nowrap;        /* 줄바꿈 안 함 */
+  overflow: hidden;           /* 넘친 내용 숨김 */
+  text-overflow: ellipsis;    /* ...으로 표시 */
+}
+
+
 
 .input_box{
 	width: 500px;
@@ -114,6 +130,9 @@ body{
 	font-size: 18px;
 	background-color: #ddd;
 }
+
+
+
 
 .aa{
 	width: 500px;
@@ -124,6 +143,8 @@ body{
 	font-size: 24px;
 	color: #000;
 }
+
+
 </style>
 
 <div class="admin_wrap">
@@ -138,61 +159,73 @@ body{
 			</div>
 			<div class="ad_chat_ri_box">
 				<div class="ad_chat_ri_top_box">
-					<span class="ad_chat_ri_user_txt f_white">에어팟프로</span>
+					<span class="ad_chat_ri_user_txt f_white ellipsis">에어팟프로</span>
 					<span class="ad_chat_ri_time_txt f_white">25.10.10 18:56</span>
 				</div>
 				<div class="ad_chat_ri_bot_box">
-					<span class="ad_chat_ri_txt f_white">안녕하세요! 관리자입니다.</span>
+					<span class="ad_chat_ri_txt f_white ellipsis">안녕하세요! 관리자입니다.</span>
 				</div>
 			</div>
 		</div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
-		<div class="ad_chat_box"></div>
 		</div>
 	</div>
 	<div class="ad_ri_wrap">
 	<div class="aa">
 	<span class="aaaa">dddddddd</span>
 	</div>
-	<input type="text" class="input_box p_input">
+	<input type="text" class="input_box p_input admin_input">
 	<a href="javascript:void(0);" class="p_btn chat_btn">
 			<span class="btn_txt">전송</span>
 		</a>
+
+
 	</div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function () {
 	const body = $('body');
-	socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
-	console.log('ddd');
-	console.log('{{ ChatIoUri }}');
-   	socket.on('connect', function(arr) {
 
-   		body.on('click','.chat_btn',function(){
-	  		socket.emit('test', {'dddd': 'ff'});
+	const socket = io.connect('{{ ChatIoUri }}', {
+		transports: ['polling'],  // 웹소켓보다 polling만 허용
+		forceNew: true
+	});
 
-	    });
+	// 연결 성공 시
+	socket.on('connect', function () {
+		//관리자가 채팅쳤을때
+		body.off('click', '.chat_btn');
+		body.on('click', '.chat_btn', function () {
+		    var msg= $.trim($('.admin_input').val());
+			var type= 'admin';
+			$.post(DomainUri+'/AdminCon/Chat',{
+				msg:msg,
+			},function(data){
+				var tmpArr=JSON.parse(data);
+				var objResult = tmpArr.result;
+				var objData = tmpArr.data;
+				//console.log(tmpArr)
+				if(objResult=="t"){
+					dataFrom=[{
+						type: objData.type ,
+						msg: msg ,
+						time: objData.time,
+						rn: objData.rn,
+					}];
+					socket.emit('LiveChat', dataFrom);
 
+				}else{
+					pAlert(tmpArr.msg);
+				}
+			});
 
+			socket.emit('test', { dddd: 'ff' });
+		});
 
-
-
-
-
-
-
-   	});
+		socket.on('LiveChat', function(arr) {
+	    	console.log('LiveChat')
+	    	console.log(arr)
+	  	});
+	});$
 
 });
 </script>
