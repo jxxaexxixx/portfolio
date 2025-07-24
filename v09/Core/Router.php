@@ -16,7 +16,10 @@ class Router extends DefinAll
     {
         $getUriType = $this->getUriType($pageArr);
         $uri        = $getUriType['uri'];
-        $routerType = $getUriType['routerType'];
+
+        if (!empty($uri) && strpos($uri, '/') === false) {
+            $this->ManagerChk();
+        }
 
         $this->dispatch($getUriType); // 최종 라우터타기
     }
@@ -146,6 +149,17 @@ class Router extends DefinAll
             exit();
         }
         exit();
+    }
+
+
+    public static function ManagerChk($routerType=null)
+    {
+        $GlobalsValGroup = new \Core\GlobalsVariable;
+        $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
+        if(!$managerIdx){
+            static::goErrorPage($routerType);
+        }
+        return ['result'=>'t'];
     }
 
 
