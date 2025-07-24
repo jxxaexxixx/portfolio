@@ -34,7 +34,7 @@ class ClientMo extends \Core\Model
         FROM $dbName.client
         WHERE name = :name
         ");
-        $Sel->bindValue(':name', $name, PDO::PARAM_INT);
+        $Sel->bindValue(':name', $name, PDO::PARAM_STR);
         $Sel->execute();
         $result = $Sel->fetch(PDO::FETCH_ASSOC);
         return $result;

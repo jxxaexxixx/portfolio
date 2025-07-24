@@ -22,8 +22,10 @@ class LoginCon extends \Core\Controller
     {
         if(!$_POST['name']) $this::errExport('메시지를 입력해 주세요.');
         $name = $_POST['name'];
-
+        
         $clientChk = ClientMo::ClientNameChk($name);
+        print_r($clientChk);
+        exit;
         if ($clientChk) $this::errExport('중복된 닉네임입니다.');
 
         // 채팅에 쓸 룸네임 발번
