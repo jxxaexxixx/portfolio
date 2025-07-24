@@ -66,5 +66,28 @@ class AdminCon extends \Core\Controller
         echo json_encode($result,JSON_UNESCAPED_UNICODE);
     }
 
+    public function ClientDel($data=null)
+    {
+
+        if(!isset($_POST['rn'])||empty($_POST['rn'])){
+            $errMsg='잘못된 접근입니다.';
+            $errOn=$this::errExport($errMsg);
+        }
+        $rn = $_POST['rn'];
+        $type=3;//삭제
+        $db        = static::GetMainDB();
+        $dbName    = self::MainDBName;
+        $update=$db->prepare("UPDATE $dbName.client SET
+            type=:type
+            WHERE rn=:rn
+        ");
+        $update->bindValue(':rn', $rn);
+        $update->bindValue(':type', $type);
+        $update->execute();
+
+        $result =['result'=>'t'];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
 
 }

@@ -229,21 +229,16 @@ $(document).ready(function () {
 		//관리자가 회원삭제했을때
 		body.off('click', '.del_btn');
 		body.on('click', '.del_btn', function () {
+			var rn= '123456';//data-rn으로 가져와야함
 			$.post(DomainUri+'/AdminCon/ClientDel',{
-				msg:msg,
+				rn:rn
 			},function(data){
 				var tmpArr=JSON.parse(data);
 				var objResult = tmpArr.result;
 				var objData = tmpArr.data;
 				//console.log(tmpArr)
 				if(objResult=="t"){
-					dataFrom=[{
-						type: objData.type ,
-						msg: msg ,
-						time: objData.time,
-						rn: objData.rn,
-					}];
-					socket.emit('LiveChat', dataFrom);
+					socket.emit('ClientDelByAdmin');
 				}else{
 					pAlert(tmpArr.msg);
 				}
@@ -252,12 +247,19 @@ $(document).ready(function () {
 			socket.emit('test', { dddd: 'ff' });
 		});
 
+		//유저가 생성됐을때 채팅목록에 뿌리기
+		socket.on('NewClient', function(arr) {
+	    	console.log('NewClient')
+	    	console.log(arr)
+	  	});
+
 		socket.on('LiveChat', function(arr) {
 	    	console.log('LiveChat')
 	    	console.log(arr)
 			//채팅방안에 채팅뿌리기
 			//채팅리스트에 최신댓글이랑 시간 뿌리기
 	  	});
+
 	});
 
 });
