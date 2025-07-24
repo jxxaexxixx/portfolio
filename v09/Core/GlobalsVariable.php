@@ -26,19 +26,32 @@ class GlobalsVariable extends AbstractExtension {
             return self::StaffUrl;
         }
 
-        $StgbValCookie = $_COOKIE['code'];
-        $encryptKey=self::encKey;
-        $StgbValCookieDecr = Controller::Decrypt($StgbValCookie,$encryptKey);
-        $gbCookieVal = json_decode($StgbValCookieDecr,true);
+
         $valName='';
         switch ($data) {
             case 'managerIdx':
+                $StgbValCookie = $_COOKIE['code'];
+                $encryptKey=self::encKey;
+                $StgbValCookieDecr = Controller::Decrypt($StgbValCookie,        $encryptKey);
+                $gbCookieVal = json_decode($StgbValCookieDecr,true);
                 if($StgbValCookie==""||$StgbValCookie==null){
                     $gbErr = ['result'=>'f','msg'=>'로그인을 해주세요.'];
                     echo json_encode($gbErr,JSON_UNESCAPED_UNICODE);
                     exit();
                 }
                 $valName=$gbCookieVal['managerIdx'];
+            break;
+            case 'clientIdx':
+                $StgbValCookie = $_COOKIE['client'];
+                $encryptKey=self::encKey;
+                $StgbValCookieDecr = Controller::Decrypt($StgbValCookie,        $encryptKey);
+                $gbCookieVal = json_decode($StgbValCookieDecr,true);
+                if($StgbValCookie==""||$StgbValCookie==null){
+                    $gbErr = ['result'=>'f','msg'=>'로그인을 해주세요.'];
+                    echo json_encode($gbErr,JSON_UNESCAPED_UNICODE);
+                    exit();
+                }
+                $valName=$gbCookieVal['clientIdx'];
             break;
             default:
             break;
