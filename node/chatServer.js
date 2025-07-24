@@ -100,20 +100,20 @@ io.on('connect', (socket) => {
         console.log(dataArray);
 
         const resArray = dataArray.map((data) => {
-            const { rn, type, msg, name = '', time } = data;
+            const { rn, msg, name = '', time } = data;
+
             console.log('rn : ' + rn)
-            console.log('type : ' + type)
             console.log('msg : ' + msg)
             console.log('name : ' + name)
             console.log('time : ' + time)
 
             // 만약 하나라도 값이 없거나 오지 않았다면 전달하지 않음
-            if (!rn || !type || !msg || !time) {
+            if (!rn || !msg || !time) {
                 return null;
             }
 
             // 채팅 쏘기
-            return { rn, type, msg, name, time };
+            return { rn, msg, name, time };
         });
 
         // 값이 있는 객체만 filtering

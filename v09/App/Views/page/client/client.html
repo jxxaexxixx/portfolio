@@ -286,13 +286,23 @@ body{
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-	const body = $('body');
-	socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
+	console.log('sadasdasdasadsads')
+	const body   = $('body');
+	const socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
 
 	socket.on('connect', function() {
 		const socketID = socket.id
 
-		socket.emit('NewClient', name);
+		client_data = [{
+			rn   : "{{rn}}",
+			name : "{{name}}",
+			msg  : `{{msg}}`,
+			time : "{{start_time}}"
+		}]
+
+		console.log(client_data)
+		socket.emit('NewClient', client_data);
+
 	});
 
 });
