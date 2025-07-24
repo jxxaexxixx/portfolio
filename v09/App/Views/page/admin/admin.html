@@ -107,6 +107,23 @@ body{
 .ad_chat_ri_txt{
 	font-size: 15px;
 }
+
+.input_box{
+	width: 500px;
+	height: 80px;
+	font-size: 18px;
+	background-color: #ddd;
+}
+
+.aa{
+	width: 500px;
+	height: 40px;
+	background-color: #fff;
+}
+.aaaa{
+	font-size: 24px;
+	color: #000;
+}
 </style>
 
 <div class="admin_wrap">
@@ -144,12 +161,38 @@ body{
 		<div class="ad_chat_box"></div>
 		</div>
 	</div>
-	<div class="ad_ri_wrap"></div>
+	<div class="ad_ri_wrap">
+	<div class="aa">
+	<span class="aaaa">dddddddd</span>
+	</div>
+	<input type="text" class="input_box p_input">
+	<a href="javascript:void(0);" class="p_btn chat_btn">
+			<span class="btn_txt">전송</span>
+		</a>
+	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
 	const body = $('body');
+	socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
+	console.log('ddd');
+	console.log('{{ ChatIoUri }}');
+   	socket.on('connect', function(arr) {
 
+   		body.on('click','.chat_btn',function(){
+	  		socket.emit('test', {'dddd': 'ff'});
+
+	    });
+
+
+
+
+
+
+
+
+
+   	});
 
 });
 </script>
