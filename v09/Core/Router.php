@@ -16,10 +16,9 @@ class Router extends DefinAll
     {
         $getUriType = $this->getUriType($pageArr);
         $uri        = $getUriType['uri'];
-        $routerType = $getUriType['routerType'];
 
-        if($uri){
-            $this->ManagerChk($routerType);
+        if (!empty($uri) && strpos($uri, '/') === false) {
+            $this->ManagerChk();
         }
 
         $this->dispatch($getUriType); // 최종 라우터타기
@@ -155,17 +154,11 @@ class Router extends DefinAll
 
     public static function ManagerChk($routerType=null)
     {
-        if(!$_COOKIE['codeIDX']){
+        $GlobalsValGroup = new \Core\GlobalsVariable;
+        $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
+        if(!$managerIdx){
             static::goErrorPage($routerType);
         }
-        if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            static::goErrorPage($routerType);
-        }
-
-        // $codeIDX                = $_COOKIE['codeIDX'];
-        // $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        // $ip                     = $_SERVER['REMOTE_ADDR'];
-        
         return ['result'=>'t'];
     }
 

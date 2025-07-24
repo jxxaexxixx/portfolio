@@ -78,7 +78,7 @@ body{
 		<div class="input_wrap">
 			<input type="text" class="input_box">
 		</div>
-		<a href="{{DomainUri}}login" class="btn_box center_box">
+		<a href="javascript:void(0);" class="btn_box center_box main_btn">
 			<span class="btn_txt">진입 하기</span>
 		</a>
 	</div>
@@ -87,8 +87,29 @@ body{
 $(document).ready(function(){
 	const body = $('body');
 
+	body.off('click', '.main_btn');
+		body.on('click', '.main_btn', function () {
+			var code = $('.input_box').val() ;
+			if (!code) {
+				pAlert('비밀번호를 입력해 주세요.');
+				return;
+			}
+			pLoadingOn();
+			$.post(DomainUri+'/MainCon/CodeInsert',{
+				code: code
+			},function(data){
+				var tmpArr=JSON.parse(data);
+				console.log(tmpArr);
+				var objResult = tmpArr.result;
+				if(objResult=="t"){
 
-});
+				}else{
+
+				}
+			pLoadingOff();
+			});
+		});
+	});
 </script>
 {% endblock %}
 
