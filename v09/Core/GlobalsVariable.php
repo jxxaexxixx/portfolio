@@ -41,17 +41,14 @@ class GlobalsVariable extends AbstractExtension {
                 }
                 $valName=$gbCookieVal['managerIdx'];
             break;
-            case 'clientIdx':
-                $StgbValCookie = $_COOKIE['client'];
-                $encryptKey=self::encKey;
-                $StgbValCookieDecr = Controller::Decrypt($StgbValCookie,        $encryptKey);
-                $gbCookieVal = json_decode($StgbValCookieDecr,true);
+            case 'clientName':
+                $StgbValCookie = $_COOKIE['name'];
                 if($StgbValCookie==""||$StgbValCookie==null){
                     $gbErr = ['result'=>'f','msg'=>'로그인을 해주세요.'];
                     echo json_encode($gbErr,JSON_UNESCAPED_UNICODE);
                     exit();
                 }
-                $valName=$gbCookieVal['clientIdx'];
+                $valName=$_COOKIE['name'];
             break;
             default:
             break;
