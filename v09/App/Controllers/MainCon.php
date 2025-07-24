@@ -32,7 +32,7 @@ class MainCon extends \Core\Controller
 		$encryptString = json_encode($encryptArr,JSON_UNESCAPED_UNICODE);
 		$encrypt       = $this->Encrypt($encryptString,$encryptKey);
 
-        setcookie('code', $encrypt, time() + 3600, "/");
+        setcookie('code', $encrypt, time() + 36000, "/");
         $result =['result'=>'t'];
         echo json_encode($result,JSON_UNESCAPED_UNICODE);
     }
