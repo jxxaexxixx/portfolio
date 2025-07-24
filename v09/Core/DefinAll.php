@@ -32,7 +32,7 @@ abstract class DefinAll
     const AppUri     = 'https://www.jjjjjproject.com/';
     const AppIoUri   = 'https://www.jjjjjproject.com/:16000';
     const ChatUri    = 'https://www.jjjjjproject.com/';
-    const ChatIoUri  = 'https://www.jjjjjproject.com/:17000';
+    const ChatIoUri  = 'https://www.jjjjjproject.com:17000';
 
     const StaffUrl  = 'https://www.jjjjjproject.com';
     /*
@@ -78,7 +78,7 @@ abstract class DefinAll
         ex) const ErrorViewIpArr = ['220.85.112.85'];
     */
     const ErrorPage      = 'page/error/error.html';  //에러페이지 경로
-    const ErrorViewIpArr = [];        //에러를 볼 수 있는 아이피를 쓰세요. 에러를 차단하고싶으면 빈 배열로 놔주세요.
+    const ErrorViewIpArr = ['59.15.59.7', '1.230.47.123'];        //에러를 볼 수 있는 아이피를 쓰세요. 에러를 차단하고싶으면 빈 배열로 놔주세요.
 
     /*------------------------------------------------------------------------------------------------*/
 

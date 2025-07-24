@@ -119,7 +119,7 @@ body{
 			</span></p>
 			<input type="text" class="input_box">
 		</div>
-		<a href="{{DomainUri}}chat" class="btn_box center_box chat_start_box">
+		<a href="javascript:void(0);" class="btn_box center_box chat_start_box">
 			<span class="btn_txt">채팅 시작하기</span>
 		</a>
 	</div>
@@ -176,7 +176,7 @@ $(document).ready(function(){
 				console.log(tmpArr);
 				var objResult = tmpArr.result;
 				if(objResult=="t"){
-
+					pAlert('{{DomainUri}}chat')
 				}else{
 
 				}

@@ -11,11 +11,8 @@ class LoginCon extends \Core\Controller
         
         $GlobalsValGroup = new \Core\GlobalsVariable;
         $managerIdx = $GlobalsValGroup->GetGlobals('managerIdx');
-
         $renderArr = [];
 
         View::renderTemplate('page/login/login.html', $renderArr);
     }
 }
-
-

@@ -319,7 +319,57 @@ body{
 <script type="text/javascript">
 $(document).ready(function(){
 	const body = $('body');
+	socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
 
+	socket.on('connect', function() {
+		const socketID = socket.id
+		// 소켓채팅으로 전환
+		$('.typing_send_btn').addClass('socket_send_btn');
+		$('.socket_send_btn').removeClass('typing_send_btn');
+
+		// 더미 쌓기
+		SocketRoomIn(clientIDX, chatIDX, socketID);
+
+		// 룸 조인 dummyData = 이미있던 나 추방
+		const joinRoomParam = {
+			rn     : rn,
+			chatIDX: chatIDX
+		}
+
+		socket.emit('ClientJoinRoom', joinRoomParam);
+
+		// 채팅받기
+		socket.on('LiveChat', function (data) {
+			AppendChat(data);
+		});
+
+		// 소켓 채팅
+		body.off('click', '.socket_send_btn.active');
+		body.on('click', '.socket_send_btn.active', function () {
+			const input_val  = $('.chat_input').val();
+			SendChat(chatIDX, rn, input_val);
+		});
+
+		// 상담 종료 누르기
+		body.off('click', '.close_btn');
+		body.on('click', '.close_btn', function () {
+			const tmpThis = $(this);
+			CloseChat(clientIDX, rn);
+		});
+
+		// 사진 선택창 열기
+		body.off('click', '.file_add_btn');
+		body.on('click', '.file_add_btn', function () {
+			const attachPara = {
+				type     : '25',
+				targetIDX: '{{clientInfo.clientIDX}}',
+				chatIDX  : '{{chatInfo.idx}}',
+				rn       : '{{chatInfo.rn}}',
+				name     : '{{chatInfo.name}}'
+			};
+			pGetAppData('chatAttach', attachPara);
+		});
+	});
 
 });
 </script>
