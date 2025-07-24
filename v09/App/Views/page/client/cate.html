@@ -1,0 +1,198 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{DomainUri}}/source/css/client.css">
+
+<style>
+	/* page css */
+	.hdr_title{margin : 5px 0 0 6px;}
+	.hdr_back_btn{padding: 22px 14px 14px 0;}
+
+	.cate_wrap { flex-direction: column;}
+	.cate_wrap .btn_wrap.btn_wrap:not(:first-of-type){margin-top: 0px;}
+	.cate_wrap{padding-top: 20px; align-items: flex-start; display: flex; row-gap: 10px;}
+	.consulting_wrap{padding-top: 30px; display: flex; flex-direction: column; row-gap: 10px;}
+	.cate_title{margin-left: 16px;}
+	.title_btn_wrap{margin-bottom: 6px;}
+
+	.cate_wrap>.btn_wrap {opacity: 0;transform: translateX(-100%);animation: fadeInEffect 0.3s ease-in-out forwards;}
+
+    @keyframes fadeInEffect {
+		to { opacity: 1; transform: translateX(0);}
+	}
+
+</style>
+
+<div class="hdr_wrap flex">
+	<a href="javascript:" class="hdr_back_btn">
+		<i class="xi-angle-left back_arrow"></i>
+	</a>
+	<img class="p_logo_img" src="{{DomainUri}}/source/img/logo.svg">
+	<span class="f_big f_600 hdr_title">고객센터</span>
+</div>
+<div class="body_wrap">
+	<div class="ex_wrap">
+		<span class="f_small f_400">
+			안녕하세요 이바이컴퍼니 고객센터입니다.<br>
+			아래의 섹션에서 문의하고자 하는 유형을 선택해 주세요.
+		</span>
+	</div>
+	<div class="cate_wrap">
+		{% for item in data %}
+		<div class="btn_wrap">
+			<a href="javascript:" class="line_btn color cate_btn" data-idx="{{ item.idx }}">
+				<span class="f_small f_400">{{ item.cont }}</span>
+			</a>
+		</div>
+		{% endfor %}
+	</div>
+	<div class="consulting_wrap">
+		{% if issetPrevCounsel %}
+			<div class="btn_wrap">
+				<a href="javascript:" class="color_btn blackColor prev_counsel_btn">
+					<span class="f_small f_400">이전 상담 내역</span>
+				</a>
+			</div>
+		{% endif %}
+		{% if issetCounseling %}
+		<div class="btn_wrap">
+			<a href="javascript:" class="color_btn gradColor counseling_btn">
+				<span class="f_small f_400">진행중인 상담 연결하기</span>
+			</a>
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	const body = $('body');
+
+	// 카테고리 버튼 누르기
+	body.off('click', '.cate_btn');
+	body.on('click', '.cate_btn', function () {
+		const tmpThis  = $(this);
+		const thisIDX  = tmpThis.data('idx');
+		
+		$.post(DomainUri + '/ClientCon/SelectCateCon', {
+			faqIDX  : thisIDX,
+		}, function (response) {
+			const res = JSON.parse(response);
+			console.log(res);
+			if( res.result != 't'){
+				const msg = res.msg;
+				alert(msg);
+				return false;
+			}
+			const { arr, type }= res.data;
+
+			let titleBtn = '';
+			if(res.data.titleBtn){
+				titleBtn = res.data.titleBtn;
+			}
+
+			// 하위 카테고리가 있음
+			if(type == 'faq'){
+				$('.cate_wrap').empty();
+				let html_con = '';
+				if (titleBtn) {
+					html_con += `
+						<a href="javascript:" class="title_btn_wrap flex cate_btn" data-idx="${titleBtn.momIDX}">
+							<i class="xi-angle-left back_arrow"></i>
+							<div class="btn_wrap">
+								<div class="line_btn gray cate_title">
+									<span class="f_small f_400">${titleBtn.cont}</span>
+								</div>
+							</div>
+						</a>
+						<span class="f_small f_400">유형을 선택해 주세요</span>
+					`;
+				}
+
+				$.each(arr, function (index, item) {
+					html_con +=`
+						<div class="btn_wrap">
+							<a href="javascript:" class="line_btn color cate_btn" data-idx="${item.idx}">
+								<span class="f_small f_400">${item.cont}</span>
+							</a>
+						</div>
+					`;
+				});
+				$('.cate_wrap').append(html_con);
+			}
+
+			// 하위 카테고리가 없음
+			if (type == 'autoReply') {
+				$('.cate_wrap').empty();
+				let html_con = `
+					<a href="javascript:" class="title_btn_wrap flex cate_btn" data-idx="${titleBtn.momIDX}">
+						<i class="xi-angle-left back_arrow"></i>
+						<div class="btn_wrap">
+							<div class="line_btn gray cate_title">
+								<span class="f_small f_400">${titleBtn.cont}</span>
+							</div>
+						</div>
+					</a>
+					<span class="f_small f_400">질문을 선택해주세요</span>
+				`;
+				$.each(arr, function (index, item) {
+					html_con += `
+						<div class="btn_wrap">
+							<a href="javascript:" class="line_btn color question_btn" data-idx="${item.idx}">
+								<span class="f_small f_400">${item.question}</span>
+							</a>
+						</div>
+					`;
+				});
+				$('.cate_wrap').append(html_con);
+			}
+			
+			$('.cate_wrap>.btn_wrap').each(function (index) {
+				$(this).css('animation-delay', (index * 0.1) + 's');
+			});
+		});
+	});
+
+	// 자동응답 버튼 누르기
+	body.off('click', '.question_btn');
+	body.on('click', '.question_btn', function () {
+		const tmpThis   = $(this);
+		const thisIDX = tmpThis.data('idx');
+		$.post(DomainUri + '/ClientCon/SelectQuestion', {
+			thisIDX,
+		}, function (response) {
+			const res = JSON.parse(response);
+			if (res.result != 't') {
+				const msg = res.msg;
+				alert(msg);
+				return false;
+			}
+			const faqIDX = res.data.faqIDX;
+			const idx = res.data.idx;
+			window.location.href = `{{DomainUri}}/chat/quickAnswer?rn={{clientInfo.roomName}}&cate=${faqIDX}&answer=${idx}`;
+		});
+	});
+
+	// 이전 상담 내역
+	body.off('click', '.prev_counsel_btn');
+	body.on('click', '.prev_counsel_btn', function () {
+		window.location.href = '{{DomainUri}}/chat/prevCounselList?rn={{clientInfo.roomName}}';
+	});
+
+	// 진행중인 상담 연결
+	body.off('click', '.counseling_btn');
+	body.on('click', '.counseling_btn', function () {
+		window.location.href = '{{DomainUri}}/chat/counsel?rn={{clientInfo.roomName}}';
+	});
+
+	// 헤더 뒤로가기 버튼
+	body.off('click', '.hdr_back_btn');
+	body.on('click', '.hdr_back_btn', function () {
+		window.location.href = 'https://qw9sa134gxcskaj3.ebuycompany.com/?rn={{clientInfo.roomName}}';
+	});
+
+
+
+
+});
+</script>
+{% endblock %}

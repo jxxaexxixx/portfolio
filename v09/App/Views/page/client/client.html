@@ -3,10 +3,319 @@
 <link rel="stylesheet" href="{{DomainUri}}/source/css/client.css">
 
 <style>
+:root {
+  --maincolor: #725CAD;
+  --subcolor: #eee;
+  --bgcolor: #3C3C3C;
+  --btn_w_color: #fff;
+}
+body{
+	width: 100vw;
+	height: 100vh;
+	min-width: 1000px;
+	min-height: 600px;
+}
+
+.center_box{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main_wrap {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bgcolor);
+  padding: 2vh;
+}
+
+.box_top_txt{
+	font-size: 24px;
+	font-weight: 600;
+	color: #fff;
+	margin-bottom: 24px;
+}
+
+.info_txt{
+	font-size: 22px;
+	color: #A393CF;
+	font-weight: 400;
+	line-height: 30px;
+	margin-top: 40px;
+}
+
+.btn_box{
+	height: 60px;
+	max-width: 120px;
+	width: 80vw;
+	background-color: var(--maincolor);
+	border-radius: 16px;
+}
+
+.btn_txt{
+	font-size: 24px;
+	color: #fff;
+	font-weight: 600;
+}
+
+.box_wrap{
+	background-color: #fff;
+	border-radius: 16px;
+	border: 4px solid var(--maincolor);
+	width: calc(100% - 62px);
+	height: 70vh;
+	margin-top: 16px;
+}
+.box_bottom{
+	width: 100%;
+	display: flex;
+	padding: 30px;
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	background-color: #fff;
+}
+
+.content_wrap{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.info_btn{
+	background-color: var(--maincolor);
+	width: 50px;
+	height: 160px;
+	border-radius: 6px;
+}
+.info_btn span{
+	color: #fff;
+	font-size: 24px;
+	font-weight: 500;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+}
+
+.input_wrap{
+	width: 100%;
+	margin-right: 26px;
+}
+.input_box{
+	width: 100%;
+	height: 60px;
+	background-color: #fff;
+	border-radius: 16px;
+	border: 4px solid var(--maincolor);
+	padding: 10px;
+	font-size: 42px;
+	color: var(--bgcolor);
+	font-weight: 600;
+}
+
+.box_middle_wrap{
+	margin-top: 80px;
+	margin-bottom: 80px;
+}
+
+.box_middle_wrap .btn_box{
+	max-width: 660px;
+	width: 80vw;
+	height: 120px;
+}
+
+.box_bottom_wrap{
+	margin-top: 20px;
+	display: flex;
+	align-items: stretch;
+	max-width: 80vw;
+}
+
+.w_txt{
+	font-size: 18px;
+	font-weight: 600;
+	color: #fff;
+}
+
+.title_txt{
+	font-size: 50px;
+	color: #fff;
+	font-weight: 500;
+}
+
+.title_txt b{
+	font-size: 70px;
+	font-weight: 600;
+}
+
+.box_main{
+	padding: 55px 30px 0;
+	height: calc(100% - 120px);
+	overflow-y: auto;
+}
+
+.chat_box.left .chat_txt{
+	background-color: #F4F4F4;
+}
+
+.chat_box.right .chat_txt{
+	background-color: #DCCFFF;
+}
+
+.chat_box.left .icon{
+	margin-right: 20px;
+}
+
+.chat_box.right .icon{
+	margin-left: 20px;
+}
+
+.icon{
+	width: 70px;
+	height: 70px;
+}
+.icon img{
+	width: 100%;
+}
+
+.chat_box{
+	display: flex;
+	width: 100%;
+}
+
+.chat_box:not(:first-of-type) {
+  margin-top: 80px;
+}
+
+.chat_box.right{
+	flex-direction: row-reverse;
+}
+
+.chat_txt{
+	padding: 20px;
+	border-radius: 24px;
+	font-size: 16px;
+	color: #313131;
+	line-height: 25px;
+	font-weight: 500;
+}
+
+.info_wrap{
+	display: flex;
+	align-items: center;
+	margin-left: 30px;
+}
+
+.info_icon_box{
+	width: 180px;
+}
+
+.info_icon_box img{
+	width: 100%;
+}
+
+.info_hidden_box{
+	background-color: var(--maincolor);
+	height: 100%;
+	width: 100%;
+}
+
 
 </style>
 
-<div class="wrap">클라이언트</div>
+<div class="main_wrap">
+	<span class="title_txt center_box">
+		<b>%name</b> 님! 반갑습니다.
+	</span>
+	<span class="info_txt">
+		남기신 채팅 내용과 %name님의 정보는 사이트 방문자에게 실시간으로 공유되며, 관리자 페이지에 안전하게 저장됩니다.<br>
+		채팅 기록은 취업 성공 시점까지 보관되며, 관리자 페이지에서 언제든 삭제하실 수 있습니다.
+	</span>
+	<div class="content_wrap">
+		<div class="box_wrap">
+			<div class="box_main">
+				<div class="chat_box left">
+					<div class="icon">
+						<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+					</div>
+					<div class="txt_box">
+						<span class="chat_txt">
+							안녕하세요, 에어팟프로 님!<br>
+							저희 포트폴리오에 방문해 주셔서 감사해요.<br>
+							우측 내 정보 영역에 듣고 싶은 말을 입력해 저장하시면,<br>
+							저와 대화하실 때마다 따뜻하게 전해드릴게요.<br>
+							<br>
+							또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.
+							<br>
+							<br>
+							!소개 — 제작자 소개<br>
+							!스택 — 기술 스택 안내<br>
+							!프로젝트 — 참여 프로젝트 목록<br>
+							!경험 — 주요 경험 설명<br>
+							!연락처 — 연락 방법 안내<br>
+							!링크 — 외부 링크 모음<br>
+							!포폴 — 포트폴리오 소개<br>
+						</span>
+					</div>
+				</div>
+				<div class="chat_box right">
+					<div class="icon">
+						<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+					</div>
+					<div class="txt_box">
+						<span class="chat_txt">
+							안녕하세요, 에어팟프로 님!<br>
+							저희 포트폴리오에 방문해 주셔서 감사해요.<br>
+							우측 내 정보 영역에 듣고 싶은 말을 입력해 저장하시면,<br>
+							저와 대화하실 때마다 따뜻하게 전해드릴게요.<br>
+							<br>
+							또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.
+							<br>
+							<br>
+							!소개 — 제작자 소개<br>
+							!스택 — 기술 스택 안내<br>
+							!프로젝트 — 참여 프로젝트 목록<br>
+							!경험 — 주요 경험 설명<br>
+							!연락처 — 연락 방법 안내<br>
+							!링크 — 외부 링크 모음<br>
+							!포폴 — 포트폴리오 소개<br>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="box_bottom">
+				<div class="input_wrap">
+					<input type="text" class="input_box">
+				</div>
+				<a href="{{DomainUri}}chat" class="btn_box center_box">
+					<span class="btn_txt">전송</span>
+				</a>
+			</div>
+		</div>
+		<div class="info_wrap">
+			<div class="info_hidden_box">
+				<div class="info_title"><span>내정보</span></div>
+				<div class="info_icon_box">
+					<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+					<a href="{{DomainUri}}chat" class="info_btn center_box"><span>편집</span></a>
+				</div>
+				<div class="info_input_box">
+					<span>닉네임</span>
+					<input type="text">
+				</div>
+				<div class="info_input_box">
+					<span>듣고 싶은 말</span>
+					<input type="text">
+				</div>
+			</div>
+			<a href="{{DomainUri}}chat" class="info_btn center_box"><span>내정보</span></a>
+		</div>
+	</div>
+	<div class="box_bottom_wrap">
+		<p><span class="w_txt">
+			해당 사이트는 PC 환경에 최적화되어 있으므로, 데스크톱 또는 노트북에서의 이용을 권장드립니다.
+			</span></p>
+	</div>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 	const body = $('body');

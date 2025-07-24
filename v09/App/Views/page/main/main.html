@@ -3,10 +3,86 @@
 <link rel="stylesheet" href="{{DomainUri}}/source/css/main.css">
 
 <style>
+:root {
+  --maincolor: #725CAD;
+  --subcolor: #eee;
+  --bgcolor: #3C3C3C;
+  --btn_w_color: #fff;
+}
+body{
+	width: 100vw;
+	height: 100vh;
+}
 
+.center_box{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main_wrap {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bgcolor);
+  padding-top: 10vh;
+  padding-left: 6vw;
+}
+
+.main_w_txt{
+	font-size: 27px;
+	color: #fff;
+	font-weight: 600;
+	line-height: 45px;
+}
+
+.btn_box{
+	height: 100px;
+	max-width: 300px;
+	width: 80vw;
+	background-color: var(--btn_w_color);
+	border-radius: 30px;
+}
+
+.btn_txt{
+	font-size: 42px;
+	color: var(--bgcolor);
+	font-weight: 600;
+}
+
+.box_wrap{
+	display: flex;
+	margin-top: 60px;
+}
+
+.input_box{
+	width: 660px;
+	height: 100px;
+	background-color: var(--btn_w_color);
+	background-color: #e2e2e2;
+	border-radius: 30px;
+	border: 6px solid #fff;
+	margin-right: 60px;
+	padding: 10px;
+	font-size: 42px;
+	color: var(--bgcolor);
+	font-weight: 600;
+}
 </style>
 
-<div class="wrap">메인</div>
+<div class="main_wrap">
+	<span class="main_w_txt">
+		안녕하세요! 해당 포트폴리오는 보안을 위해 비밀번호로 보호되고 있습니다.<br>
+		비밀번호는 이력서에 함께 기재되어 있으니 참고해 주세요.
+	</span>
+	<div class="box_wrap">
+		<div class="input_wrap">
+			<input type="text" class="input_box">
+		</div>
+		<a href="{{DomainUri}}login" class="btn_box center_box">
+			<span class="btn_txt">진입 하기</span>
+		</a>
+	</div>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 	const body = $('body');
@@ -15,3 +91,5 @@ $(document).ready(function(){
 });
 </script>
 {% endblock %}
+
+
