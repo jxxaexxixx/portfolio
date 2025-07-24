@@ -21,18 +21,14 @@ class AdminCon extends \Core\Controller
             $errMsg='메시지를 입력해 주세요.';
             $errOn=$this::errExport($errMsg);
         }
-
-        $msg = $_POST['msg'];
-        $GlobalsValGroup= new \Core\GlobalsVariable;
-        //임시임 닉네임 만들떄 쿠키로 구워서 글로벌변수로 가져와야함
-        // $client_idx=$GlobalsValGroup->GetGlobals('clientIdx');
-        $client_idx=1;
-        if(!isset($client_idx)||empty($client_idx)){
+        if(!isset($_POST['rn'])||empty($_POST['rn'])){
             $errMsg='잘못된 접근입니다.';
             $errOn=$this::errExport($errMsg);
         }
-        $chat = ClientMo::GetClient($client_idx);
-        if(!isset($chat['rn'])||empty($chat['rn'])){
+        $msg = $_POST['msg'];
+        $rn = $_POST['rn'];
+        $client = ClientMo::GetClient($rn);
+        if(!isset($client['idx'])||empty($client['idx'])){
             $errMsg='잘못된 접근입니다.';
             $errOn=$this::errExport($errMsg);
         }
@@ -55,7 +51,7 @@ class AdminCon extends \Core\Controller
                 :create_time
             )
         ");
-        $insert->bindValue(':client_idx', $client_idx);
+        $insert->bindValue(':client_idx', $client['idx']);
         $insert->bindValue(':type', $type);
         $insert->bindValue(':msg',  $msg);
         $insert->bindValue(':create_time', $create_time);
@@ -64,8 +60,7 @@ class AdminCon extends \Core\Controller
 
         $dataArr = [
             'type' => $type,
-            'time' => $create_time,
-            'rn' => $chat['rn']
+            'time' => $create_time
         ];
         $result =['result'=>'t','data'=>$dataArr];
         echo json_encode($result,JSON_UNESCAPED_UNICODE);
