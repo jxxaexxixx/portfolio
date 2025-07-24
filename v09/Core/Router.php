@@ -50,14 +50,14 @@ class Router extends DefinAll
             }
         }
 
-        $goClass='';
-        $goFunc='';
-        $routerType='con'; //페이지아님
+        $goClass    = '';
+        $goFunc     = '';
+        $routerType = 'con';  //페이지아님
 
         foreach ($pageArr as $key) { //페이지인지 조사
-            $pageName=$key[0];
-            $pageClass=$key[1];
-            $pageFunc=$key[2];
+            $pageName  = $key[0];
+            $pageClass = $key[1];
+            $pageFunc  = $key[2];
             if($uri==$pageName){
                 //페이지네?
                 $goClass=$pageClass;
@@ -80,6 +80,10 @@ class Router extends DefinAll
                 }
             }
 
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                throw new \Exception("컨트롤러 형식이 아닙니다.".$uri);
+            }
+
             $pattern = '/([a-zA-z]+)\/([a-zA-z]+)/';
             if (!preg_match($pattern, $uri)) {
                 throw new \Exception("컨트롤러 형식이 아닙니다.".$uri);
@@ -91,7 +95,7 @@ class Router extends DefinAll
 
             $pattern = '/Con$/i';
             if (!preg_match($pattern, $goClass)) {
-                throw new \Exception("컨트롤러 형식이 아닙니다.");
+                throw new \Exception("컨트롤러 형식이 아닙니다.".' 컨트롤러 패턴아님');
             }
 
         }
@@ -157,7 +161,7 @@ class Router extends DefinAll
         $GlobalsValGroup = new \Core\GlobalsVariable;
         $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
         if(!$managerIdx){
-            static::goErrorPage($routerType);
+            static::goErrorPage($routerType.' 쿠키 없음');
         }
         return ['result'=>'t'];
     }
