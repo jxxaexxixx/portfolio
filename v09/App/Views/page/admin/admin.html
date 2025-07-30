@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<link rel="stylesheet" href="{{DomainUri}}/source/css/admin.css">
+<link rel="stylesheet" href="{{DomainUri}}/source/css/admin.css?v={{ "now"|date("Y-m-d H:i:s") }}">
 
 <style>
 :root {
@@ -43,9 +43,12 @@ body{
 
 .ad_ri_wrap {
 	width: calc(100% - 280px);
-  height: calc(100% - 45px);
-  border: 2px solid var(--maincolor);
-  border-radius: 15px;
+  	height: calc(100% - 45px);
+  	border: 2px solid var(--maincolor);
+  	border-radius: 15px;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
 }
 .ad_chat_list_wrap {
   height: 100%;
@@ -114,6 +117,142 @@ body{
 	width: 100%;
 }
 
+.ad_set_wrap{
+	border: 1px solid #646464;
+	border-radius: 10px;
+	padding: 10px;
+	width: 153px;
+	height: 100%;
+}
+.ad_set_box{
+	width: 100%;
+	height: 39px;
+	margin-bottom: 10px;
+}
+.ad_set_btn{
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	border-radius: 7px;
+	padding-left: 14px;
+}
+.ad_set_img{
+	width: 21px;
+	height: 21px;
+
+}
+.set_btn_txt{
+	font-size: 14px;
+	color: #4a4a4a;
+	font-weight: 400;
+	padding-left: 10px;
+}
+
+.ad_set_btn_act{
+	background-color: var(--maincolor);
+}
+.ad_set_btn_act .set_btn_txt{
+	color: #fff;
+	font-weight: 500;
+}
+.ad_set_btn_act:hover{
+	color: #fff!important;
+}
+
+.ad_set_cont_wrap{
+	width: calc(100% - 163px);
+	display: none;
+	height: 100%;
+
+}
+
+.ad_set_cont_user_list_wrap{
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+.ad_set_cont_wrap_act{
+	display: block;
+}
+.ad_set_user_list_dt_box{
+	border: 1px solid #646464;
+	border-radius: 10px;
+	width: calc(100% - 210px);
+	height: 100%;
+}
+.ad_set_user_list_box{
+	border: 1px solid #646464;
+	border-radius: 10px;
+	width: 200px;
+	height: 100%;
+	overflow-y: auto;
+	scrollbar-width: none;
+}
+
+.ad_set_user_list_img_box{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	padding: 20px 0 0 0;
+
+}
+
+.ad_set_user_list_img{
+	width: 160px;
+	height: 160px;
+}
+.ad_set_user_list_txt_box{
+	width: 100%;
+	text-align: center;
+	padding: 35px 10px 0 10px;
+}
+.ad_set_user_list_txt_box span{
+	width: 100%;
+}
+.ad_set_user_list_txt{
+	font-size: 13px;
+	color: #fff;
+	padding-bottom: 7px;
+}
+.ad_set_user_list_txt_cont{
+	font-size: 15px;
+	color: #fff;
+	font-weight: 500;
+	line-height: 1.3;
+}
+
+
+.user_data_table_wrap{
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	padding: 10px;
+}
+
+.p_table .p_td_status{
+	width: 60px!important;
+}
+.p_table .td_status_2{
+	color: #e16464;
+}
+.p_table .p_td_createTime{
+	width: 160px!important;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 .ellipsis {
 	width: 100%; /* 부모 요소의 너비에 맞춤 */
@@ -122,17 +261,12 @@ body{
   text-overflow: ellipsis;    /* ...으로 표시 */
 }
 
-
-
 .input_box{
 	width: 500px;
 	height: 80px;
 	font-size: 18px;
 	background-color: #ddd;
 }
-
-
-
 
 .aa{
 	width: 500px;
@@ -153,40 +287,239 @@ body{
 	</div>
 	<div class="ad_le_wrap">
 		<div class="ad_chat_list_wrap">
-		<div class="ad_chat_box">
-			<div class="ad_chat_le_box">
-				<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="ad_chat_le_img">
-			</div>
-			<div class="ad_chat_ri_box">
-				<div class="ad_chat_ri_top_box">
-					<span class="ad_chat_ri_user_txt f_white ellipsis">에어팟프로</span>
-					<span class="ad_chat_ri_time_txt f_white">25.10.10 18:56</span>
-				</div>
-				<div class="ad_chat_ri_bot_box">
-					<span class="ad_chat_ri_txt f_white ellipsis">안녕하세요! 관리자입니다.</span>
-				</div>
-			</div>
-		</div>
+				{% if chatList %}
+					{% for key in chatList %}
+						<a href="javascript:void(0);" class="ad_chat_box ad_chat_box_act" data-rn="{{key.rn}}">
+							<div class="ad_chat_le_box">
+								<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="ad_chat_le_img">
+							</div>
+							<div class="ad_chat_ri_box">
+								<div class="ad_chat_ri_top_box">
+									<span class="ad_chat_ri_user_txt f_white ellipsis">{{key.name}}</span>
+									<span class="ad_chat_ri_time_txt f_white">{{key.create_time}}</span>
+								</div>
+								<div class="ad_chat_ri_bot_box">
+									<span class="ad_chat_ri_txt f_white ellipsis">{{key.talk}}</span>
+								</div>
+							</div>
+						</a>
+					{% endfor %}
+				{% else %}
+				{% endif %}
 		</div>
 	</div>
-	<div class="ad_ri_wrap">
-	<div class="aa">
-	<span class="aaaa">dddddddd</span>
-	</div>
+	{#
 	<input type="text" class="input_box p_input admin_input">
 	<a href="javascript:void(0);" class="p_btn chat_btn">
 			<span class="btn_txt">전송</span>
 		</a>
 	<a href="javascript:void(0);" class="p_btn del_btn">
 		<span class="btn_txt">회원삭제</span>
-	</a>
+	</a> #}
+	<div class="ad_ri_wrap ad_chat_set_wrap">
+		<div class="ad_set_wrap">
+			<div class="ad_set_box">
+				<a href="javascript:void(0);" class="ad_set_btn ad_set_btn_act">
+					<img src="{{DomainUri}}/source/img/icons/user.png" alt="회원 목록 아이콘" class="ad_set_img">
+					<span class="set_btn_txt">회원 목록</span>
+				</a>
+			</div>
+			<div class="ad_set_box">
+				<a href="javascript:void(0);" class="ad_set_btn">
+					<img src="{{DomainUri}}/source/img/icons/block_c.png" alt="금지어 설정 아이콘" class="ad_set_img">
+					<span class="set_btn_txt">금지어 설정</span>
+				</a>
+			</div>
+			<div class="ad_set_box">
+				<a href="javascript:void(0);" class="ad_set_btn">
+					<img src="{{DomainUri}}/source/img/icons/chat_c.png" alt="빠른 답변 아이콘" class="ad_set_img">
+					<span class="set_btn_txt">빠른 답변</span>
+				</a>
+			</div>
+		</div>
+		<div class="ad_set_cont_wrap ad_set_cont_wrap_act">
+			<div class="ad_set_cont_user_list_wrap">
+				<div class="ad_set_user_list_dt_box">
+					<div class=" user_data_table_wrap">
+						<div class="p_table_box user_data_table_box">
+							<table class="p_table dataTable">
+								<thead>
+									<th>idx</th>
+									<th>회원명</th>
+									<th>회원상태</th>
+									<th>가입일</th>
+								</thead>
+								<tbody class="settlement_tbody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="ad_set_user_list_box ">
+					<div class="ad_set_user_list_cont display_none">
+						<div class="ad_set_user_list_img_box">
+							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="ad_set_user_list_img">
+						</div>
+						<div class="ad_set_user_list_txt_box">
+							<span class="ad_set_user_list_txt">닉네임</span>
+							<span class="ad_set_user_list_username ad_set_user_list_txt_cont"></span>
+						</div>
+						<div class="ad_set_user_list_txt_box">
+							<span class="ad_set_user_list_txt">가입일</span>
+							<span class="ad_set_user_list_createtime ad_set_user_list_txt_cont"></span>
+						</div>
+						<div class="ad_set_user_list_txt_box">
+							<span class="ad_set_user_list_txt">듣고 싶은 말</span>
+							<span class="ad_set_user_list_talk ad_set_user_list_txt_cont"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ad_set_cont_wrap ad_set_cont_block_wrap">
+			<div class="ad_set_block_dt_box">
+			</div>
+			<div class="ad_set_block_box">
+			</div>
+		</div>
+		<div class="ad_set_cont_wrap ad_set_cont_quick_wrap">
+			<div class="ad_set_quick_dt_box">
+			</div>
+			<div class="ad_set_quick_box">
+			</div>
+		</div>
+	</div>
 
+	<div class="ad_ri_wrap ad_chat_de_wrap display_none">
 
 	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function () {
 	const body = $('body');
+
+	var dataTable;
+	if (dataTable instanceof $.fn.dataTable.Api) {
+	    dataTable.destroy();
+		$('.dataTable').DataTable().destroy();
+	}
+	dataTable=$('.dataTable').DataTable({
+	    "order": [[4,'desc']],
+	    "iDisplayLength":50,
+	    "ajax" : {
+	        url:DomainUri+"/AdminCon/ClientDataTable",
+	        type:"POST",
+	        data:function(d){},
+	   	},
+	   	"columns": [
+	        { "data": "idx", "class":"p_td_idx","orderable": false,"visible":false},
+	        { "data": "name", "class":""},
+	        { "data": "status", "class":"p_td_status"},
+	        { "data": "create_time", "class":"p_td_createTime"},
+	        { "data": "talk", "class":"","visible":false},
+	    ],
+    	"initComplete": function(settings, data, dataIndex){
+    		pTableInitComplete(this,'y');
+
+		},
+		fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+			var tdStatus='';
+			if(aData['status']=='정상'){
+				tdStatus='td_status_1';
+            }else if(aData['status']=='삭제'){
+				tdStatus='td_status_2';
+            }
+			$('.p_td_status', nRow).html('<span class="f_small '+tdStatus+'">'+aData['status']+'</span>');
+		},
+		drawCallback: function( settings ) {
+		},
+	});
+
+	// 행 클릭 이벤트 바인딩
+ 	$('.dataTable tbody').on('click', 'tr', function(){
+ 	    // 1) 선택된 행의 데이터 가져오기
+ 	    var data = dataTable.row(this).data();
+
+ 	    // 2) 유저 리스트 박스 보여주기
+ 	    var $box = $('.ad_set_user_list_cont');
+ 	    $box.removeClass('display_none');
+
+ 	    // 3) 텍스트 채우기
+ 	    $box.find('.ad_set_user_list_username')
+ 	        .text(data.name);
+
+ 	    $box.find('.ad_set_user_list_createtime')
+ 	        .text(data.create_time);
+
+ 	    $box.find('.ad_set_user_list_talk')
+ 	       .text(data.talk);
+
+ 	   	// 4) (옵션) 사용자 이미지 변경하기
+ 	   	//    data.imageUrl 같은 프로퍼티가 있으면 넣어 주시면 됩니다.
+    	// $box.find('.ad_set_user_list_img')
+    	//     .attr('src', data.imageUrl || '{{DomainUri}}/source/img/icons/c_user.png');
+  	});
+
+	$('.ad_chat_box').on('click', function(e){
+	    e.preventDefault();
+	    var $this = $(this);
+
+		$('.ad_chat_de_wrap').removeClass('display_none');
+		$('.ad_chat_set_wrap').addClass('display_none');
+
+	    var idx = $('.ad_chat_list_wrap').index($this);
+	    $('.ad_set_cont_wrap')
+	      	.removeClass('ad_chat_box_act')
+	      	.eq(idx)
+	      	.addClass('ad_chat_box_act');
+	});
+
+
+	$('.ad_set_btn').on('click', function(e){
+	    e.preventDefault();
+	    var $this = $(this);
+	    // 1) 버튼 활성화 클래스 토글
+	    $('.ad_set_btn').removeClass('ad_set_btn_act');
+	    $this.addClass('ad_set_btn_act');
+	    // 2) 이미지 src 업데이트 (_c 붙였다 떼었다)
+	    $('.ad_set_btn').each(function(){
+    	  	var $img = $(this).find('.ad_set_img');
+    	  	var src  = $img.attr('src');
+    	  	if ($(this).hasClass('ad_set_btn_act')) {
+    	  	  	// 활성 버튼: _c 가 있으면 제거
+    	  	  	$img.attr('src', src.replace('_c.', '.'));
+    	  	} else {
+    	  	  	// 비활성 버튼: _c 가 없으면 추가
+    	  	  	if (!/_c\./.test(src)) {
+    	  	  	  	$img.attr('src', src.replace(/(\.[^\.]+)$/, '_c$1'));
+    	  	  	}
+    	  	}
+    	});
+	    // 3) 컨텐츠 영역 전환 (버튼 순서와 같은 index)
+	    var idx = $('.ad_set_btn').index($this);
+	    $('.ad_set_cont_wrap')
+	      	.removeClass('ad_set_cont_wrap_act')
+	      	.eq(idx)
+	      	.addClass('ad_set_cont_wrap_act');
+	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	const socket = io.connect('{{ ChatIoUri }}', {
 		transports: ['polling'],  // 웹소켓보다 polling만 허용
@@ -221,8 +554,6 @@ $(document).ready(function () {
 					pAlert(tmpArr.msg);
 				}
 			});
-
-			socket.emit('test', { dddd: 'ff' });
 		});
 
 

@@ -10,7 +10,12 @@ class AdminCon extends \Core\Controller
 {
     public function Render()
     {
+        $GlobalsValGroup = new \Core\GlobalsVariable;
+        $managerIdx = $GlobalsValGroup->GetGlobals('managerIdx');
+        $chatList  = ClientMo::ChatList($managerIdx);
+
         $renderArr = [
+            'chatList'=>$chatList,
         ];
         View::renderTemplate('page/admin/admin.html', $renderArr);
     }
@@ -86,6 +91,15 @@ class AdminCon extends \Core\Controller
         $update->execute();
 
         $result =['result'=>'t'];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function ClientDataTable($data=null)
+    {
+        $GlobalsValGroup = new \Core\GlobalsVariable;
+        $managerIdx = $GlobalsValGroup->GetGlobals('managerIdx');
+        $clientDataTable =ClientMo::ClientDataTable($managerIdx);
+        $result =['result'=>'t','data'=>$clientDataTable];
         echo json_encode($result,JSON_UNESCAPED_UNICODE);
     }
 

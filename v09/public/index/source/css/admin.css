@@ -27,9 +27,9 @@ select{-webkit-appearance: auto;-moz-appearance: auto;appearance: auto;}
 /* IE 에서 Select box 화살표 제거 */
 select::-ms-expand{display: none;}
 a{position: relative; display: inline-block;text-decoration: none;}
-a:hover, a:active{text-decoration: none; color: inherit!important;}
+a:hover, a:active{text-decoration: none; }
 a span{text-decoration: none; color: #444;}
-a:hover span, a:active span{text-decoration: none; color: inherit!important;}
+a:hover span, a:active span{text-decoration: none; }
 a:active span{color: #444;}
 div{position: relative;font-size: 0;}
 i, span, font, label{position: relative;display: inline-block;vertical-align: middle;}
@@ -190,13 +190,13 @@ li{font-size: 0;}
 .p_btn:active{top: 1px;}
 
 
-.p_incidental_wrap{background-color: #fff;padding: 10px; display: flex; justify-content: flex-start;align-items: flex-end;}
-.p_table_wrap {background-color: #fff;height: calc(100% - 75px); overflow-y: auto;}
-.p_table_box{height: 100%;padding: 0;background-color: #fff;}
+.p_incidental_wrap{padding-bottom: 7px; display: flex; justify-content: space-between;align-items: flex-end;}
+.p_table_wrap {height: calc(100% - 52px); overflow-y: auto;}
+.p_table_box{height: 100%;padding: 0;}
 
 .p_table_box_active{border: 2px solid var(--maincolor);}
 .p_table_box .dataTables_length{width: 170px;}
-.p_table_box .dataTables_length label {font-size: 14px;}
+.p_table_box .dataTables_length label {font-size: 14px; color:#fff;}
 .p_table_box .dataTables_length label select {    background-color: #efececd6;
     padding: 3px 5px;}
 
@@ -206,14 +206,14 @@ li{font-size: 0;}
 .p_dt_lengthTxt{}
 
 .p_table_box .dataTables_filter{ display: inline-block;width: 300px;text-align: right;}
-.p_table_box .dataTables_filter label{padding-bottom: 2px; width: 100%; color: #919191;font-size: 14px;}
-.p_table_box .dataTables_filter label input {width: calc(100% - 80px);background-color: #efececd6;margin-left: 10px; padding: 3px;}
+.p_table_box .dataTables_filter label{padding-bottom: 2px; width: 100%; color: #fff;font-size: 14px;}
+.p_table_box .dataTables_filter label input {width: calc(100% - 80px);color: #333;margin-left: 10px; padding: 3px; }
 .p_dt_searchInput{width: 100% ;background-image: url('/source/img/icons/dt_search_icon.png');background-repeat: no-repeat;background-size: 12px auto;background-position-y: 5px;background-position-x: calc(100% - 10px);}
 
 .p_dt_info{padding: 5px 0;}
 
-.p_table_box .dataTables_paginate{padding: 0 10px; text-align: right; width: calc(100% - 400px); display: inline-block;}
-.p_table_box .dataTables_info{width: 400px; padding-left: 10px; display: inline-block; font-size: 13px; color: #919191;}
+.p_table_box .dataTables_paginate{padding-top: 3px; text-align: right; width: calc(100% - 400px); display: inline-block;}
+.p_table_box .dataTables_info{width: 400px; display: inline-block; font-size: 13px; color: #919191;}
 .p_table_box .dataTables_paginate a{position: relative;display: inline-block; text-align: center; font-size: 14px; cursor: pointer;}
 
 .p_table_box .dataTables_paginate .first,
@@ -273,9 +273,9 @@ li{font-size: 0;}
 .p_table_box .dataTables_paginate span a:hover{}
 .p_table_box .dataTables_paginate span a:active{top: 1px;}
 .dataTables_wrapper {height: 100%;}
-.p_table {margin:auto; width: 100% !important;background-color: #fff; border: 1px solid rgb(122 122 122 / 10%); border-radius: 10px;}
+.p_table {margin:auto; width: 100% !important; color: #fff; border: 1px solid rgb(122 122 122 / 10%);}
 .p_table_box .dataTables_empty{text-align: center;padding:40px 0;}
-.p_table thead {background-color: #efececd6;}
+.p_table thead {}
 
 .p_table th,td {border-right: 1px solid rgb(122 122 122 / 10%)}
 .p_table th{padding: 10px 0; width: auto; font-weight: 700; color: #919191; border-bottom: 1px solid rgb(122 122 122 / 10%); /*background-color: #fff;*/text-align: center;}
@@ -283,9 +283,6 @@ li{font-size: 0;}
 .p_table th.sorting,
 .p_table th.sorting_asc,
 .p_table th.sorting_desc{padding-right: 10px;}
-.p_table th.sorting{background: url("/source/img/icons/sort_both.png")no-repeat right 50%;background-size: 15px auto;}
-.p_table th.sorting_asc{background: url("/source/img/icons/sort_asc.png")no-repeat right 50%;background-size: 15px auto;}
-.p_table th.sorting_desc{background: url("/source/img/icons/sort_desc.png")no-repeat right 50%;background-size: 15px auto;}
 .p_table .p_td_chk,
 .p_table .p_td_chk2{position: relative; width: 25px !important; height: 15px;padding: 4px 0;text-align: center;cursor: pointer;}
 .p_table .p_td_chk:before,
@@ -299,7 +296,8 @@ li{font-size: 0;}
 .p_table th span{font-size: 12px;color: #8d8d8d;}
 
 .p_table tbody tr{}
-.p_table tbody tr:hover{background-color: aliceblue;}
+.p_table tbody tr:hover{background-color: #f8f0ff;
+    color: #333;}
 .p_table tbody tr:hover{/*background-color: #DCE7F9;*/}
 .p_table td{padding: 5px 8px;font-size: 12px;border-top: 1px solid rgb(122 122 122 / 10%); word-break: break-all;}
 .p_table td:hover{cursor: pointer;}
@@ -340,7 +338,7 @@ li{font-size: 0;}
 .p_table td .p_dt_btn:active{top: 1px;}
 .p_table td .p_dtbtn_font{color: #fff;}
 .p_table td .p_dt_btn_active{background-color: var(--maincolor);}
-.p_table tr.p_tr_active{background-color: aliceblue;}
+.p_table tr.p_tr_active{background-color: #f8f0ff; color: #333;}
 .p_dt_td_icon_btn{display: inline-block;vertical-align: middle;padding: 5px;border-radius: 5px;margin:0 3px;}
 .p_dt_td_icon_btn:last-child{margin-right: 0;}
 .p_dt_td_icon_btn font{width: 20px;height: 20px;background-image: url('/source/img/icons/iconPack.png');background-repeat: no-repeat;background-size: 230px auto;}

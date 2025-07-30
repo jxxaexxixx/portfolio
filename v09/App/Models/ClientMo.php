@@ -42,4 +42,49 @@ class ClientMo extends \Core\Model
         $result = $Sel->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public static function ChatList($data = null)
+    {
+        $managerIdx=$data;
+        $db     = static::GetMainDB();
+        $dbName = self::MainDBName;
+       $Sel = $db->prepare("
+            SELECT
+                idx,
+                name,
+                create_time,
+                talk
+            FROM `{$dbName}`.`client`
+            WHERE manager_idx = :manager_idx
+        ");
+        $Sel->bindValue(':manager_idx', (int)$managerIdx, PDO::PARAM_INT);
+        $Sel->execute();
+        $result = $Sel->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public static function ClientDataTable($data = null)
+    {
+        $managerIdx=$data;
+        $db     = static::GetMainDB();
+        $dbName = self::MainDBName;
+       $Sel = $db->prepare("
+            SELECT
+                idx,
+                name,
+                CASE `type`
+                    WHEN 2 THEN '정상'
+                    WHEN 3 THEN '삭제'
+                    ELSE '기타'
+                END AS status,
+                create_time,
+                talk
+            FROM `{$dbName}`.`client`
+            WHERE manager_idx = :manager_idx
+        ");
+        $Sel->bindValue(':manager_idx', (int)$managerIdx, PDO::PARAM_INT);
+        $Sel->execute();
+        $result = $Sel->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
