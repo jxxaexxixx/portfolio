@@ -184,7 +184,7 @@ li{font-size: 0;}
 .overflowScrollbar::-webkit-scrollbar-track {border-radius: 3px;background-color: var(--bgcolor);}
 
 
-.p_btn{ padding: 7px 16px; display: flex; align-items: center;  justify-content: center;background-color: var(--maincolor);border-radius: 4px;}
+.p_btn{ padding: 7px 16px; display: flex; align-items: center;  justify-content: center;background-color: var(--maincolor);border-radius: 4px; color: #fff!important; font-size: 14px; font-weight: 500; cursor: pointer;}
 .p_btn span{color: #fff!important; font-size: 14px; font-weight: 500;}
 .p_btn:hover span{color: #fff!important;}
 .p_btn:active{top: 1px;}

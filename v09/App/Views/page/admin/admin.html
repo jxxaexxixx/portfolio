@@ -117,8 +117,8 @@ body{
 .ad_chat_ri_time_txt{
 	font-size: 10px;
 	color: #989898;
-	min-width: 40px;
-	max-width: 40px;
+	min-width: 47px;
+	max-width: 47px;
 }
 .ad_chat_ri_txt{
 	font-size: 13px;
@@ -287,51 +287,29 @@ body{
 	height: calc(100% - 100px);
 	overflow-y: auto;
 	scrollbar-width: none;
-	padding: 20px;
+	padding: 10px 15px;
 }
 
 .chat_msg_box{
 	padding-bottom: 30px;
 }
 
-.chat_admin_msg_box{
-	display: flex;
-	align-items: start;
-}
-.chat_admin_msg_img_box{
-	padding-right: 10px;
-}
-.chat_admin_msg_img{
-	width: 40px;
-	height: 40px;
-}
-.chat_admin_msg_sb_box{
-	background-color: #DCCFFF;
-	border-radius: 10px;
-	padding: 15px;
-	max-width: 65%;
-}
-.chat_admin_msg_text{
-	font-size: 14px;
-	color: #444;
-	font-weight: 500;
-	line-height: 1.5;
-}
-
 .chat_client_msg_box{
 	display: flex;
 	align-items: start;
-	justify-content: flex-end;
 }
 .chat_client_msg_img_box{
-	padding-left: 10px;
+	padding-right: 10px;
+}
+.chat_client_msg_img{
+	width: 40px;
+	height: 40px;
 }
 .chat_client_msg_sb_box{
-	background-color: #fff;
+	background-color: #DCCFFF;
 	border-radius: 10px;
-	padding: 15px;
+	padding: 11px 18px;
 	max-width: 65%;
-
 }
 .chat_client_msg_text{
 	font-size: 14px;
@@ -339,9 +317,52 @@ body{
 	font-weight: 500;
 	line-height: 1.5;
 }
-.chat_client_msg_img{
+
+
+
+
+
+
+
+
+
+
+.chat_admin_msg_box{
+	display: flex;
+	align-items: start;
+	justify-content: flex-end;
+}
+.chat_admin_msg_img_box{
+	padding-left: 10px;
+}
+.chat_admin_msg_sb_box{
+	background-color: #fff;
+	border-radius: 10px;
+	padding:  11px 18px;
+	max-width: 65%;
+
+}
+.chat_admin_msg_text{
+	font-size: 14px;
+	color: #444;
+	font-weight: 500;
+	line-height: 1.5;
+}
+.chat_admin_msg_img{
 	width: 40px;
 	height: 40px;
+}
+
+.chat_client_timer_box,.chat_admin_timer_box{
+	padding: 4px 6px;
+	display: flex;
+	align-items: flex-end;
+	height: -webkit-fill-available;
+
+}
+.chat_admin_timer_text,.chat_client_timer_text{
+	font-size: 12px;
+	color: #989898;
 }
 
 .ad_chat_de_cont_send_box{
@@ -397,7 +418,7 @@ body{
 		<div class="ad_chat_list_wrap">
 				{% if chatList %}
 					{% for key in chatList %}
-						<a href="javascript:void(0);" class="ad_chat_box" data-rn="{{key.rn}}">
+						<a href="javascript:void(0);" class="ad_chat_box" data-rn="{{key.rn}}" data-create-time="{{key.time}}">
 							<div class="ad_chat_le_box">
 								<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="ad_chat_le_img">
 							</div>
@@ -503,87 +524,23 @@ body{
 		<div class="ad_chat_de_box">
 			<div class="ad_chat_de_cont_box">
 				<div class="ad_chat_de_cont_chat_box">
-					<div class="chat_admin_msg_box chat_msg_box">
-						<div class="chat_admin_msg_img_box">
-							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="chat_admin_msg_img">
-						</div>
-						<div class="chat_admin_msg_sb_box">
-							<span class="chat_admin_msg_text">안녕하세요, 에어팟프로 님!
-								저희 포트폴리오에 방문해 주셔서 감사해요.
-								우측 내 정보 영역에 듣고 싶은 말을 입력해 저장하시면,
-								저와 대화하실 때마다 따뜻하게 전해드릴게요.
-
-								또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.
-
-								!소개 — 제작자 소개
-								!스택 — 기술 스택 안내
-								!프로젝트 — 참여 프로젝트 목록
-								!경험 — 주요 경험 설명
-								!연락처 — 연락 방법 안내
-								!링크 — 외부 링크 모음
-								!포폴 — 포트폴리오 소
-							</span>
-						</div>
-					</div>
-					<div class="chat_admin_msg_box chat_msg_box">
-						<div class="chat_admin_msg_img_box">
-							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="chat_admin_msg_img">
-						</div>
-						<div class="chat_admin_msg_sb_box">
-							<span class="chat_admin_msg_text">안녕하세요, 에어팟프로 님!
-								저희 포트폴리오에 방문해 주셔서 감사해요.
-								우측 내 정보 영역에 듣고 싶은 말을 입력해 저장하시면,
-								저와 대화하실 때마다 따뜻하게 전해드릴게요.
-
-								또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.
-
-								!소개 — 제작자 소개
-								!스택 — 기술 스택 안내
-								!프로젝트 — 참여 프로젝트 목록
-								!경험 — 주요 경험 설명
-								!연락처 — 연락 방법 안내
-								!링크 — 외부 링크 모음
-								!포폴 — 포트폴리오 소
-							</span>
-						</div>
-					</div>
-					<div class="chat_admin_msg_box chat_msg_box">
-						<div class="chat_admin_msg_img_box">
-							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="chat_admin_msg_img">
-						</div>
-						<div class="chat_admin_msg_sb_box">
-							<span class="chat_admin_msg_text">안녕하세요, 에어팟프로 님!
-								저희 포트폴리오에 방문해 주셔서 감사해요.
-								우측 내 정보 영역에 듣고 싶은 말을 입력해 저장하시면,
-								저와 대화하실 때마다 따뜻하게 전해드릴게요.
-
-								또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.
-
-								!소개 — 제작자 소개
-								!스택 — 기술 스택 안내
-								!프로젝트 — 참여 프로젝트 목록
-								!경험 — 주요 경험 설명
-								!연락처 — 연락 방법 안내
-								!링크 — 외부 링크 모음
-								!포폴 — 포트폴리오 소
-							</span>
-						</div>
-					</div>
 					<div class="chat_client_msg_box chat_msg_box">
-						<div class="chat_client_msg_sb_box">
-							<span class="chat_client_msg_text">유저양</span>
-						</div>
 						<div class="chat_client_msg_img_box">
-							<img src="{{DomainUri}}/source/img/icons/man.png" alt="유저 이미지" class="chat_client_msg_img">
+							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="chat_client_msg_img">
+						</div>
+						<div class="chat_client_msg_sb_box">
+							<span class="chat_client_msg_text">유저채팅이에오
+							</span>
+						</div>
+						<div class="chat_client_timer_box">
+							<span class="chat_client_timer_text">25.10.10 00:00</span>
 						</div>
 					</div>
 				</div>
 				<div class="ad_chat_de_cont_send_box">
-					<textarea class="send_chat"></textarea>
+					<textarea class="send_chat" placeholder="유저에게 보낼 내용을 입력해주세요"></textarea>
 					<div class="chat_send_btn_box">
-						<a href="javascript:void(0);" class="p_btn chat_send_btn">
-							<span class="btn_txt">전송</span>
-						</a>
+						<button type="button" class="chat_send_btn p_btn">전송</button>
 					</div>
 				</div>
 			</div>
@@ -695,6 +652,71 @@ $(document).ready(function () {
   	  	$('.ad_chat_set_wrap').addClass('display_none');
   	  	$('.ad_chat_box').removeClass('ad_chat_box_act');
   	  	$this.addClass('ad_chat_box_act');
+
+		var rn=  $('.ad_chat_box_act').data('rn');
+		$.post(DomainUri+'/AdminCon/GetChat',{
+			rn:rn
+		},function(data){
+			var tmpArr=JSON.parse(data);
+			var objResult = tmpArr.result;
+			var objData = tmpArr.data;
+			if (objResult !== "t") {
+    		  	return pAlert(tmpArr.msg);
+    		}
+    		$('.ad_set_user_list_username')
+    		    .text(objData.userName);
+
+    		$('.ad_set_user_list_createtime')
+    		    .text(objData.userCreateTime);
+
+    		$('.ad_set_user_list_talk')
+    		    .text(objData.userTalk && objData.userTalk.trim()
+    		          ? objData.userTalk
+    		          : '-');
+			// 1) 채팅 박스 컨테이너 가져와서 초기화
+    		var $chatBox = $('.ad_chat_de_cont_chat_box');
+    		$chatBox.empty();
+			// 2) chatList 순회하며 말풍선 생성
+    		$.each(objData.chatList, function(i, chat){
+    		  	var bubbleHtml = '';
+    		  	if (chat.type === 1) {
+    		  	  // 관리자 메시지
+    		  	  bubbleHtml = ''
+    		  	    + '<div class="chat_admin_msg_box chat_msg_box">'
+    		  	    +   '<div class="chat_admin_timer_box">'
+    		  	    +     '<span class="chat_admin_timer_text">' + chat.create_time + 	'</span>'
+    		  	    +   '</div>'
+    		  	    +   '<div class="chat_admin_msg_sb_box">'
+    		  	    +     '<span class="chat_admin_msg_text">' + chat.msg + '</span>'
+    		  	    +   '</div>'
+    		  	    +   '<div class="chat_admin_msg_img_box">'
+    		  	    +     '<img src="' + DomainUri + '/source/img/icons/man.png" '
+    		  	    +          'alt="관리자 이미지" class="chat_admin_msg_img">'
+    		  	    +   '</div>'
+    		  	    + '</div>';
+    		  	}
+    		  	else if (chat.type === 2) {
+    		  	  // 유저 메시지
+    		  	  bubbleHtml = ''
+    		  	    + '<div class="chat_client_msg_box chat_msg_box">'
+    		  	    +   '<div class="chat_client_msg_img_box">'
+    		  	    +     '<img src="' + DomainUri + '/source/img/icons/c_user.png" '
+    		  	    +          'alt="유저 이미지" class="chat_client_msg_img">'
+    		  	    +   '</div>'
+    		  	    +   '<div class="chat_client_msg_sb_box">'
+    		  	    +     '<span class="chat_client_msg_text">' + chat.msg + '</span>'
+    		  	    +   '</div>'
+    		  	    +   '<div class="chat_client_timer_box">'
+    		  	    +     '<span class="chat_client_timer_text">' + chat.create_time + 	'</span>'
+    		  	    +   '</div>'
+    		  	    + '</div>';
+    		  	}
+    		  	// 3) 컨테이너에 붙이기
+    		  	$chatBox.append(bubbleHtml);
+			});
+			// 4) 스크롤을 맨 아래로 내리기
+    		$chatBox.scrollTop($chatBox.prop('scrollHeight'));
+		});
   	});
 
 
@@ -726,23 +748,19 @@ $(document).ready(function () {
 	      	.addClass('ad_set_cont_wrap_act');
 	});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// 정렬 함수
+	function sortChatBoxes() {
+	  	var $wrap = $('.ad_chat_list_wrap');
+	  	var $boxes = $wrap.children('.ad_chat_box').get();
+	  	$boxes.sort(function(a, b){
+	  	  	var at = new Date($(a).attr('data-create-time')).getTime();
+	  	  	var bt = new Date($(b).attr('data-create-time')).getTime();
+	  	  	return bt - at;  // 내림차순: 최신이 위로
+	  	});
+	  	$.each($boxes, function(_, box){
+	  	  	$wrap.append(box);
+	  	});
+	}
 
 	const socket = io.connect('{{ ChatIoUri }}', {
 		transports: ['polling'],  // 웹소켓보다 polling만 허용
@@ -753,10 +771,15 @@ $(document).ready(function () {
 	socket.on('connect', function () {
 		//관리자가 채팅쳤을때
 		body.off('click', '.chat_send_btn');
-		body.on('click', '.chat_send_btn', function () {
-		    var msg= $.trim($('.admin_input').val());
+		body.on('click', '.chat_send_btn', function (e) {
+			e.preventDefault();
+		    var msg= $.trim($('.send_chat').val());
 			var type= 'admin';
-			var rn= '123456';//data-rn으로 가져와야함
+			var rn=  $('.ad_chat_box_act').data('rn');
+			 if (!rn) {
+    		    pAlert('잘못된 접근입니다. 새로고침 후 다시 시도해주세요');
+    		    return;
+    		}
 			$.post(DomainUri+'/AdminCon/Chat',{
 				msg:msg,
 				rn:rn,
@@ -769,21 +792,56 @@ $(document).ready(function () {
 					dataFrom=[{
 						type: objData.type ,
 						time: objData.time,
-						msg: msg ,
+						msg: msg,
 						rn: rn,
 					}];
 					socket.emit('LiveChat', dataFrom);
+					var bubbleHtml = ''
+    				  	+ '<div class="chat_admin_msg_box chat_msg_box">'
+    				  	+   '<div class="chat_admin_timer_box">'
+    				  	+     '<span class="chat_admin_timer_text">' + objData.formattime + '</span>'
+    				  	+   '</div>'
+    				  	+   '<div class="chat_admin_msg_sb_box">'
+    				  	+     '<span class="chat_admin_msg_text">' + msg + '</span>'
+    				  	+   '</div>'
+    				  	+   '<div class="chat_admin_msg_img_box">'
+    				  	+     '<img src="' + DomainUri + '/source/img/icons/man.png" '
+    				  	+          'alt="유저 이미지" class="chat_admin_msg_img">'
+    				  	+   '</div>'
+    				  	+ '</div>';
+    				$('.ad_chat_de_cont_chat_box').append(bubbleHtml);
+        			var $active = $('.ad_chat_box_act');
+        			$active
+        			  .find('.ad_chat_ri_txt').text(msg).end()
+        			  .find('.ad_chat_ri_time_txt').text(objData.chat_list_time).end()
+        			  .attr('data-create-time', objData.time);
+
+        			sortChatBoxes();
+
+        			$('.send_chat').val('');
+					var $chatBox = $('.ad_chat_de_cont_chat_box');
+  					$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
 				}else{
 					pAlert(tmpArr.msg);
 				}
 			});
 		});
 
+		// Enter 키로 보내기
+    	body.off('keydown', '.send_chat');
+    	body.on('keydown', '.send_chat', function(e) {
+    	    // Enter 키이고 Shift 조합이 아닐 때
+    	    if (e.key === 'Enter' && !e.shiftKey) {
+    	        e.preventDefault();               // 줄바꿈 방지
+    	        $('.chat_send_btn').trigger('click');
+    	    }
+    	});
+
 
 		//관리자가 회원삭제했을때
 		body.off('click', '.user_del_btn');
 		body.on('click', '.user_del_btn', function () {
-			var rn= '123456';//data-rn으로 가져와야함
+			var rn=  $('.ad_chat_box_act').data('rn');
 			$.post(DomainUri+'/AdminCon/ClientDel',{
 				rn:rn
 			},function(data){
@@ -797,8 +855,6 @@ $(document).ready(function () {
 					pAlert(tmpArr.msg);
 				}
 			});
-
-			socket.emit('test', { dddd: 'ff' });
 		});
 
 		//유저가 생성됐을때 채팅목록에 뿌리기

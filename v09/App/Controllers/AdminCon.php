@@ -20,6 +20,31 @@ class AdminCon extends \Core\Controller
         View::renderTemplate('page/admin/admin.html', $renderArr);
     }
 
+    public function GetChat($data=null)
+    {
+        if(!isset($_POST['rn'])||empty($_POST['rn'])){
+            $errMsg='잘못된 접근입니다.';
+            $errOn=$this::errExport($errMsg);
+        }
+        $rn = $_POST['rn'];
+        $client = ClientMo::GetClient($rn);
+        if(!isset($client['idx'])||empty($client['idx'])){
+            $errMsg='잘못된 접근입니다.';
+            $errOn=$this::errExport($errMsg);
+        }
+        $client_idx=$client['idx'];
+        $chatList = ChatMo::GetChat($client_idx);
+
+        $dataArr = [
+            'userName' => $client['name'],
+            'userCreateTime' => $client['create_time'],
+            'userTalk' => $client['talk'],
+            'chatList' => $chatList,
+        ];
+        $result =['result'=>'t','data'=>$dataArr];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
     public function Chat($data=null)
     {
         if(!isset($_POST['msg'])||empty($_POST['msg'])){
@@ -38,6 +63,18 @@ class AdminCon extends \Core\Controller
             $errOn=$this::errExport($errMsg);
         }
         $create_time = date('Y-m-d H:i:s');
+        $formatted   = date('y.m.d H:i', strtotime($create_time));
+
+        $dt     = new \DateTime($create_time);
+        $hour   = (int)$dt->format('H');
+        $minute = $dt->format('i');
+        $prefix = $hour < 12 ? '오전' : '오후';
+        $hour12 = $hour % 12;
+        if ($hour12 === 0) {
+            $hour12 = 12;
+        }
+        $chat_list_time = sprintf('%s %d:%02d', $prefix, $hour12, $minute);
+
         $type = 1;
         $db        = static::GetMainDB();
         $dbName    = self::MainDBName;
@@ -65,7 +102,9 @@ class AdminCon extends \Core\Controller
 
         $dataArr = [
             'type' => $type,
-            'time' => $create_time
+            'formattime' => $formatted,
+            'time' => $create_time,
+            'chat_list_time' => $chat_list_time,
         ];
         $result =['result'=>'t','data'=>$dataArr];
         echo json_encode($result,JSON_UNESCAPED_UNICODE);

@@ -6,41 +6,48 @@ use PDO;
 class ClientMo extends \Core\Model
 {
 
-    public static function GetClient($data = null)
+    public static function GetClient($rn = null)
     {
-        $rn = $data;
-        $db        = static::GetMainDB();
-        $dbName    = self::MainDBName;
-        $Sel = $db->prepare("SELECT
-            idx,
-            rn
-        FROM $dbName.client
-        WHERE rn = :rn
-        ");
-        $Sel->bindValue(':rn', (int)$rn, PDO::PARAM_INT);
-        $Sel->execute();
-        $result = $Sel->fetch(PDO::FETCH_ASSOC);
-        return $result;
+        $db      = static::GetMainDB();
+        $dbName  = self::MainDBName;
+
+        $sql = "
+            SELECT
+                `idx`,
+                `name`,
+                `talk`,
+                DATE_FORMAT(`create_time`, '%Y-%m-%d %H:%i') AS `create_time`
+            FROM `{$dbName}`.`client`
+            WHERE `rn` = :rn
+            LIMIT 1
+        ";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':rn', $rn, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function ClientNameChk($data = null)
     {
-        $name = $data;
+        $name    = $data;
+        $db      = static::GetMainDB();
+        $dbName  = self::MainDBName;
 
-        $db     = static::GetMainDB();
-        $dbName = self::MainDBName;
-        $Sel    = $db->prepare("SELECT
-            idx,
-            rn,
-            type,
-            manager_idx
-        FROM $dbName.client
-        WHERE name = :name
-        ");
-        $Sel->bindValue(':name', $name, PDO::PARAM_STR);
-        $Sel->execute();
-        $result = $Sel->fetch(PDO::FETCH_ASSOC);
-        return $result;
+        $sql = "
+            SELECT
+                `idx`,
+                `rn`,
+                `type`,
+                `manager_idx`
+            FROM `{$dbName}`.`client`
+            WHERE `name` = :name
+            LIMIT 1
+        ";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     public static function ChatList($data = null)
@@ -74,7 +81,8 @@ class ClientMo extends \Core\Model
                         )
                     ELSE DATE_FORMAT(B.create_time, '%Y.%m.%d')
                 END AS formatted_time,
-                B.msg AS last_msg
+                B.msg AS last_msg,
+                B.create_time AS time
             FROM `{$dbName}`.`client` A
             LEFT JOIN (
                 SELECT
