@@ -94,6 +94,7 @@ class ClientMo extends \Core\Model
             ) B                       -- AS 생략
               ON B.client_idx = A.idx
             WHERE A.manager_idx = :manager_idx
+            ORDER BY B.create_time DESC
         ";
 
         $stmt = $db->prepare($sql);
