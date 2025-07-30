@@ -28,9 +28,9 @@ select{-webkit-appearance: auto;-moz-appearance: auto;appearance: auto;}
 select::-ms-expand{display: none;}
 a{position: relative; display: inline-block;text-decoration: none;}
 a:hover, a:active{text-decoration: none; }
-a span{text-decoration: none; color: #444;}
+/* a span{text-decoration: none; color: #444;} */
 a:hover span, a:active span{text-decoration: none; }
-a:active span{color: #444;}
+/* a:active span{color: #444;} */
 div{position: relative;font-size: 0;}
 i, span, font, label{position: relative;display: inline-block;vertical-align: middle;}
 ol{font-size: 0;}

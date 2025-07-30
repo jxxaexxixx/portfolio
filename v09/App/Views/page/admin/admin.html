@@ -15,13 +15,13 @@ body{
 	min-height: 600px;
 }
 .admin_wrap {
-  width: 100%;
-  height: 100%;
-  background-color: var(--bgcolor);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 25px;
+  	width: 100%;
+  	height: 100%;
+  	background-color: var(--bgcolor);
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 10px;
+  	padding: 15px 25px 5px 25px;
 }
 
 .ad_main_txt_box{
@@ -35,20 +35,28 @@ body{
 }
 
 .ad_le_wrap {
-  width: 270px;
-  height: calc(100% - 45px);
-  border: 2px solid var(--maincolor);
-  border-radius: 15px;
+  	width: 270px;
+  	height: calc(100% - 75px);
+  	border: 2px solid var(--maincolor);
+  	border-radius: 15px;
 }
 
 .ad_ri_wrap {
 	width: calc(100% - 280px);
-  	height: calc(100% - 45px);
+  	height: calc(100% - 75px);
   	border: 2px solid var(--maincolor);
   	border-radius: 15px;
 	padding: 10px;
 	display: flex;
 	justify-content: space-between;
+}
+.ad_bot_wrap {
+	width: 100%;
+	text-align: right;
+}
+.ad_bot_txt {
+	font-size: 12px;
+	color: #fff;
 }
 .ad_chat_list_wrap {
   height: 100%;
@@ -67,7 +75,7 @@ body{
 	border: 2px solid var(--maincolor);
   	border-radius: 10px;
   	background-color: rgba(92, 79, 127, 0.49);
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -100,17 +108,16 @@ body{
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	font-size: 13px;
-	width: calc(100% - 65px);
+	font-size: 12px;
 }
 .ad_chat_ri_time_txt{
 	font-size: 10px;
 	color: #989898;
-	min-width: 65px;
-	max-width: 65px;
+	min-width: 40px;
+	max-width: 40px;
 }
 .ad_chat_ri_txt{
-	font-size: 14px;
+	font-size: 13px;
 }
 
 .ad_chat_ri_bot_box{
@@ -296,10 +303,10 @@ body{
 							<div class="ad_chat_ri_box">
 								<div class="ad_chat_ri_top_box">
 									<span class="ad_chat_ri_user_txt f_white ellipsis">{{key.name}}</span>
-									<span class="ad_chat_ri_time_txt f_white">{{key.create_time}}</span>
+									<span class="ad_chat_ri_time_txt f_white">{{key.formatted_time}}</span>
 								</div>
 								<div class="ad_chat_ri_bot_box">
-									<span class="ad_chat_ri_txt f_white ellipsis">{{key.talk}}</span>
+									<span class="ad_chat_ri_txt f_white ellipsis">{{key.last_msg}}</span>
 								</div>
 							</div>
 						</a>
@@ -391,7 +398,10 @@ body{
 	</div>
 
 	<div class="ad_ri_wrap ad_chat_de_wrap display_none">
-
+		<span class="btn_txt">채팅이야야야</span>
+	</div>
+	<div class="ad_bot_wrap">
+		<span class="ad_bot_txt">해당 사이트는 PC 환경에 최적화되어 있으므로, 데스크톱 또는 노트북에서의 이용을 권장드립니다.</span>
 	</div>
 </div>
 <script type="text/javascript">
