@@ -4,6 +4,7 @@ namespace App\Controllers;
 use \Core\View;
 use App\Models\ChatMo;
 use App\Models\ClientMo;
+use App\Models\BlockedWordsMo;
 
 
 class AdminCon extends \Core\Controller
@@ -112,7 +113,6 @@ class AdminCon extends \Core\Controller
 
     public function ClientDel($data=null)
     {
-
         if(!isset($_POST['rn'])||empty($_POST['rn'])){
             $errMsg='잘못된 접근입니다.';
             $errOn=$this::errExport($errMsg);
@@ -139,6 +139,92 @@ class AdminCon extends \Core\Controller
         $managerIdx = $GlobalsValGroup->GetGlobals('managerIdx');
         $clientDataTable =ClientMo::ClientDataTable($managerIdx);
         $result =['result'=>'t','data'=>$clientDataTable];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function BlockDataTable($data=null)
+    {
+        $blockDataTable =BlockedWordsMo::BlockDataTable();
+        $result =['result'=>'t','data'=>$blockDataTable];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function BlockInsert($data=null)
+    {
+        if(!isset($_POST['words'])||empty($_POST['words'])){
+            $errMsg='금지어를 입력해 주세요.';
+            $errOn=$this::errExport($errMsg);
+        }
+
+        $words = $_POST['words'];
+        $create_time = date('Y-m-d H:i:s');
+        $type = 2;
+        $db        = static::GetMainDB();
+        $dbName    = self::MainDBName;
+        $insert =$db->prepare("INSERT INTO $dbName.blocked_words
+            (
+                type,
+                words,
+                create_time
+            )
+            VALUES
+            (
+                :type,
+                :words,
+                :create_time
+            )
+        ");
+        $insert->bindValue(':type', $type);
+        $insert->bindValue(':words',  $words);
+        $insert->bindValue(':create_time', $create_time);
+        $insert->execute();
+        $result =['result'=>'t'];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function BlockDel($data=null)
+    {
+        if(!isset($_POST['idx'])||empty($_POST['idx'])){
+            $errMsg='잘못된 접근입니다.';
+            $errOn=$this::errExport($errMsg);
+        }
+        $idx = $_POST['idx'];
+        $type=3;//삭제
+        $db        = static::GetMainDB();
+        $dbName    = self::MainDBName;
+        $update=$db->prepare("UPDATE $dbName.blocked_words SET
+            type=:type
+            WHERE idx=:idx
+        ");
+        $update->bindValue(':idx', $idx);
+        $update->bindValue(':type', $type);
+        $update->execute();
+        $result =['result'=>'t'];
+        echo json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function BlockUpdate($data=null)
+    {
+        if(!isset($_POST['idx'])||empty($_POST['idx'])){
+            $errMsg='잘못된 접근입니다.';
+            $errOn=$this::errExport($errMsg);
+        }
+        if(!isset($_POST['words'])||empty($_POST['words'])){
+            $errMsg='금지어를 입력해 주세요.';
+            $errOn=$this::errExport($errMsg);
+        }
+        $idx = $_POST['idx'];
+        $words = $_POST['words'];
+        $db        = static::GetMainDB();
+        $dbName    = self::MainDBName;
+        $update=$db->prepare("UPDATE $dbName.blocked_words SET
+            words=:words
+            WHERE idx=:idx
+        ");
+        $update->bindValue(':idx', $idx);
+        $update->bindValue(':words', $words);
+        $update->execute();
+        $result =['result'=>'t'];
         echo json_encode($result,JSON_UNESCAPED_UNICODE);
     }
 
