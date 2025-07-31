@@ -12,8 +12,13 @@
 body{
 	width: 100vw;
 	height: 100vh;
-	min-width: 1000px;
+	min-width: 1100px;
 	min-height: 600px;
+	overflow: auto;
+}
+
+.display_none{
+	display: none!important;
 }
 
 .center_box{
@@ -37,11 +42,11 @@ body{
 }
 
 .info_txt{
-	font-size: 22px;
-	color: #A393CF;
-	font-weight: 400;
-	line-height: 30px;
-	margin-top: 40px;
+    font-size: 16px;
+    color: #A393CF;
+    font-weight: 400;
+    line-height: 21px;
+    padding: 10px 0 0 4px;
 }
 
 .btn_box{
@@ -61,22 +66,156 @@ body{
 .box_wrap{
 	background-color: #fff;
 	border-radius: 16px;
-	border: 4px solid var(--maincolor);
-	width: calc(100% - 62px);
-	height: 70vh;
-	margin-top: 16px;
-}
-.box_bottom{
-	width: 100%;
-	display: flex;
-	padding: 30px;
-	position: sticky;
-	bottom: 0;
-	left: 0;
-	background-color: #fff;
+	border: 3px solid var(--maincolor);
+	width: calc(100% - 50px);
+	padding: 10px;
+	height: 100%;
+	transition: width 0.4s ease;
 }
 
+.info_open_wrap{
+	width: calc(100% - 310px)!important;
+}
+
+.info_wrap{
+	width: 300px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	opacity: 0;
+  	transform: translateX(30px);
+  	transition: opacity 0.4s ease, transform 0.4s ease;
+  	pointer-events: none;
+}
+
+.info_wrap_show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.info_box{
+	width: calc(100% - 50px);
+	height: 100%;
+}
+.info_de_box{
+	height: calc(100% - 60px);
+	overflow-y: auto;
+	scrollbar-width: none;
+    border-radius: 10px;
+	background-color: rgba(114, 92, 173, 0.59);
+	border:2px solid #725CAD;
+	margin-bottom: 10px;
+
+}
+.info_save_btn_box{
+	height: 60px;
+}
+.info_save_btn{
+	height: 45px;
+	width: 100%;
+	background-color: var(--maincolor);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+	cursor: pointer;
+
+}
+.info_btn_close_box{
+	width: 50px;
+	padding-left: 10px;
+}
+.info_close_btn{
+	background-color: #686473;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 39px 10px;
+	cursor: pointer;
+
+}
+
+
+.info_open_btn_box{
+	width: 50px;
+	display: flex;
+	justify-content: flex-end;
+	transition: opacity 0.3s ease;
+}
+.info_open_btn_box.display_none {
+  opacity: 0;
+  transition-delay: 0.3s;
+  display: none;
+}
+.info_open_btn{
+	background-color: var(--maincolor);
+	border-radius: 10px;
+	color:#fff;
+	font-size: 18px;
+	font-weight: 500;
+	padding: 20px 10px;
+	cursor: pointer;
+}
+
+
+
+
+.chat_bottom_box{
+	width: 100%;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	background-color: #fff;
+}
+.chat_input_box{
+	width: calc(100% - 100px);
+	height: 50px;
+	padding-right: 15px;
+
+}
+.chat_input_box input{
+	width: 100%;
+	height: 100%;
+	font-size: 20px;
+	color:#333;
+	border: 2px solid #725CAD;
+	border-radius: 10px;
+	padding: 5px 9px;
+}
+.chat_input_box input{
+  	background-color: transparent;
+  	transition: background-color 0.3s ease;
+}
+
+.chat_input_box input:focus{
+  	background-color: #725cad29;
+  	outline: none;
+  	color:#333;
+}
+.send_btn_box{
+	width: 100px;
+	height: 50px;
+}
+.send_btn{
+	width: 100%;
+	height: 100%;
+	background-color: var(--maincolor);
+	border-radius: 10px;
+	color:#fff;
+	font-size: 18px;
+	font-weight: 500;
+	cursor: pointer;
+}
+.top_txt_box{
+	height: 110px;
+
+}
 .content_wrap{
+	width: 100%;
+	height: calc(100% - 110px);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -87,6 +226,8 @@ body{
 	width: 50px;
 	height: 160px;
 	border-radius: 6px;
+	cursor: pointer;
+
 }
 .info_btn span{
 	color: #fff;
@@ -96,21 +237,8 @@ body{
 	text-orientation: mixed;
 }
 
-.input_wrap{
-	width: 100%;
-	margin-right: 26px;
-}
-.input_box{
-	width: 100%;
-	height: 60px;
-	background-color: #fff;
-	border-radius: 16px;
-	border: 4px solid var(--maincolor);
-	padding: 10px;
-	font-size: 42px;
-	color: var(--bgcolor);
-	font-weight: 600;
-}
+
+
 
 .box_middle_wrap{
 	margin-top: 80px;
@@ -122,56 +250,58 @@ body{
 	width: 80vw;
 	height: 120px;
 }
-
+.box_top_wrap{
+	width: 100%;
+	height: calc(100% - 30px);
+}
 .box_bottom_wrap{
-	margin-top: 20px;
+	height: 30px;
+	padding: 7px 0 0 4px;
 	display: flex;
 	align-items: stretch;
-	max-width: 80vw;
 }
 
 .w_txt{
-	font-size: 18px;
-	font-weight: 600;
+	font-size: 15px;
 	color: #fff;
 }
 
 .title_txt{
-	font-size: 50px;
+	font-size: 37px;
 	color: #fff;
-	font-weight: 500;
+	font-weight: 400;
 }
 
 .title_txt b{
-	font-size: 70px;
-	font-weight: 600;
+	font-size: 50px;
+	font-weight: 500;
 }
 
 .box_main{
-	padding: 55px 30px 0;
-	height: calc(100% - 120px);
+	padding: 10px 5px 0;
+	height: calc(100% - 60px);
 	overflow-y: auto;
 }
 
-.chat_box.left .chat_txt{
+.chat_box.chat_admin_box .chat_txt{
 	background-color: #F4F4F4;
 }
 
-.chat_box.right .chat_txt{
+.chat_box.chat_user_box .chat_txt{
 	background-color: #DCCFFF;
 }
 
-.chat_box.left .icon{
-	margin-right: 20px;
+.chat_box.chat_admin_box .icon{
+	margin-right: 12px;
 }
 
-.chat_box.right .icon{
-	margin-left: 20px;
+.chat_box.chat_user_box .icon{
+	margin-left: 12px;
 }
 
 .icon{
-	width: 70px;
-	height: 70px;
+	width: 60px;
+	height: 60px;
 }
 .icon img{
 	width: 100%;
@@ -183,99 +313,210 @@ body{
 }
 
 .chat_box:not(:first-of-type) {
-  margin-top: 80px;
+  margin-top: 40px;
 }
 
-.chat_box.right{
+.chat_box.chat_user_box{
 	flex-direction: row-reverse;
 }
-
+.txt_box{
+	padding-top: 10px;
+	max-width: 65%;
+}
 .chat_txt{
-	padding: 20px;
-	border-radius: 24px;
-	font-size: 16px;
-	color: #313131;
-	line-height: 25px;
-	font-weight: 500;
+	padding: 10px 15px;
+    border-radius: 14px;
+    font-size: 15px;
+    color: #313131;
+    line-height: 25px;
+    font-weight: 500;
+	width: 100%;
+	white-space: pre-wrap;
+  	word-wrap: break-word;
+  	overflow-wrap: break-word;
 }
 
-.info_wrap{
-	display: flex;
-	align-items: center;
-	margin-left: 30px;
-}
+
 
 .info_icon_box{
-	width: 180px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 15px 0 25px 0;
 }
 
 .info_icon_box img{
+	width: 140px;
+}
+.info_title_box{
+	padding: 10px 0 0 0;
+	text-align: center;
+}
+.info_title{
+	color:#fff;
+	font-size: 19px;
+	font-weight: 500;
+}
+.info_line{
+	border-top: 1px solid #725CAD;
+    width: 100%;
+    margin: 10px 0;
+}
+.info_input_box{
+	padding-bottom: 18px;
+}
+.info_input_box span{
+	font-size: 14px;
+    color: #fff;
+    width: 100%;
+    padding: 0 0 9px 3px;
+    font-weight: 400;
+}
+.info_input_box input{
+	font-size: 15px;
+	color:#fff;
 	width: 100%;
+	border: 1px solid #725CAD;
+	border-radius: 5px;
+	height: 25px;
+	padding: 2px 4px;
+}
+.info_input_box textarea{
+	height: 150px;
+	font-size: 15px;
+	color:#fff;
+	width: 100%;
+	border: 1px solid #725CAD;
+	border-radius: 4px;
+	resize: none;
+	padding: 5px;
+
 }
 
-.info_hidden_box{
-	background-color: var(--maincolor);
-	height: 100%;
-	width: 100%;
+.info_input_box input,
+.info_input_box textarea {
+  background-color: transparent;
+  transition: background-color 0.3s ease;
 }
 
+.info_input_box input:focus,
+.info_input_box textarea:focus {
+  background-color: #ffffff70;
+  outline: none;
+  color:#333;
+}
+
+.info_de_cont_box{
+	padding: 0 15px;
+}
+.info_de_top_box{
+	height: calc(100% - 35px);
+}
+.info_de_bot_box{
+	width: 100%;
+	height: 35px;
+}
+.info_user_del_btn_box{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 15px;
+}
+.user_del_btn{
+	background-color: #D02D30;
+	font-size: 13px;
+	color:#fff;
+	padding: 4px 12px;
+	cursor: pointer;
+}
 
 </style>
 
 <div class="main_wrap">
-	<span class="title_txt center_box">
-		<b>{{name}}</b> 님! 반갑습니다.
-	</span>
-	<span class="info_txt">
-		남기신 채팅 내용과 {{name}}님의 정보는 사이트 방문자에게 실시간으로 공유되며, 관리자 페이지에 안전하게 저장됩니다.<br>
-		채팅 기록은 취업 성공 시점까지 보관되며, 관리자 페이지에서 언제든 삭제하실 수 있습니다.
-	</span>
-	<div class="content_wrap">
-		<div class="box_wrap">
-			<div class="box_main">
-				<div class="chat_box left">
-					<div class="icon">
-						<img src="{{DomainUri}}source/img/icons/man.png" alt="">
-					</div>
-					<div class="txt_box">
-						<pre class="chat_txt">{{msg}}</pre>
-					</div>
-				</div>
-				<div class="chat_box right">
-					<div class="icon">
-						<img src="{{DomainUri}}source/img/icons/man.png" alt="">
-					</div>
-					<div class="txt_box">
-						<pre class="chat_txt">안녕하세요</pre>
-					</div>
-				</div>
-			</div>
-			<div class="box_bottom">
-				<div class="input_wrap">
-					<input type="text" class="input_box">
-				</div>
-				<a href="{{DomainUri}}chat" class="btn_box center_box">
-					<span class="btn_txt">전송</span>
-				</a>
-			</div>
+	<div class="box_top_wrap">
+		<div class="top_txt_box">
+			<span class="title_txt center_box">
+				<b>{{name}}</b>&nbsp;님! 반갑습니다.
+			</span>
+			<span class="info_txt">
+				남기신 채팅 내용과 {{name}}님의 정보는 사이트 방문자에게 실시간으로 공유되며, 관리자 페이지에 안전하게 저장됩니다.<br>
+				채팅 기록은 취업 성공 시점까지 보관되며, 관리자 페이지에서 언제든 삭제하실 수 있습니다.
+			</span>
 		</div>
-		<div class="info_wrap">
-			<div class="info_hidden_box">
-				<div class="info_title"><span>내정보</span></div>
-				<div class="info_icon_box">
-					<img src="{{DomainUri}}source/img/icons/man.png" alt="">
-					<a href="{{DomainUri}}chat" class="info_btn center_box"><span>편집</span></a>
+		<div class="content_wrap">
+			<div class="box_wrap ">
+				<div class="box_main">
+					<div class="chat_box chat_admin_box">
+						<div class="icon">
+							<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+						</div>
+						<div class="txt_box">
+							<pre class="chat_txt">{{msg}}</pre>
+						</div>
+					</div>
+					<div class="chat_box chat_user_box">
+						<div class="icon">
+							<img src="{{DomainUri}}source/img/icons/c_user.png" alt="">
+						</div>
+						<div class="txt_box">
+							<pre class="chat_txt">안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요</pre>
+						</div>
+					</div>
 				</div>
-				<div class="info_input_box">
-					<span>닉네임</span>
-					<input type="text">
-				</div>
-				<div class="info_input_box">
-					<span>듣고 싶은 말</span>
-					<input type="text">
+				<div class="chat_bottom_box">
+					<div class="chat_input_box">
+						<input type="text" class="send_input">
+					</div>
+					<div class="send_btn_box">
+						<button class="send_btn">전송</button>
+					</div>
 				</div>
 			</div>
-			<a href="{{DomainUri}}chat" class="info_btn center_box"><span>내정보</span></a>
+			<div class="info_open_btn_box ">
+				<button class="info_open_btn">
+					&lt;<br>
+					내<br>
+					정<br>
+					보
+				</button>
+			</div>
+			<div class="info_wrap info_wrap_show display_none">
+				<div class="info_box">
+					<div class="info_de_box">
+						<div class="info_de_top_box">
+							<div class="info_title_box">
+								<span class="info_title">내 정보</span>
+							</div>
+							<div class="info_line"></div>
+							<div class="info_icon_box">
+								<img src="{{DomainUri}}source/img/icons/c_user.png" alt="">
+							</div>
+							<div class="info_de_cont_box">
+								<div class="info_input_box">
+									<span>닉네임</span>
+									<input type="text">
+								</div>
+								<div class="info_input_box">
+									<span>듣고 싶은 말</span>
+									<textarea name="" id=""></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="info_de_bot_box">
+							<div class="info_user_del_btn_box">
+								<button class="user_del_btn">회원 삭제</button>
+							</div>
+						</div>
+					</div>
+					<div class="info_save_btn_box">
+						<button class="info_save_btn">저장</button>
+					</div>
+				</div>
+				<div class="info_btn_close_box">
+					<button class="info_close_btn center_box">&gt;<br>닫<br>기</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="box_bottom_wrap">
@@ -286,8 +527,32 @@ body{
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-	console.log('sadasdasdasadsads')
 	const body   = $('body');
+
+	$('.info_open_btn').on('click', function(){
+		$('.info_open_btn_box')
+		.addClass('display_none');
+		$('.box_wrap')
+		.addClass('info_open_wrap');
+		$('.info_wrap')
+		.addClass('info_wrap_show');
+		$('.info_wrap')
+		.removeClass('display_none');
+	});
+
+	$('.info_close_btn').on('click', function(e){
+		e.preventDefault();
+		$('.info_wrap')
+		.removeClass('info_wrap_show');
+		$('.info_wrap')
+		.addClass('display_none');
+		$('.box_wrap')
+		.removeClass('info_open_wrap');
+		$('.info_open_btn_box')
+		.removeClass('display_none');
+	});
+
+
 	const socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
 
 	socket.on('connect', function() {
