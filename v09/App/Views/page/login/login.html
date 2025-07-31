@@ -184,7 +184,14 @@ body{
 $(document).ready(function(){
 	const body = $('body');
 
-	body.off('click', '.chat_start_box');
+
+	const socket = io.connect('{{ ChatIoUri }}', {
+		transports: ['polling'],  // 웹소켓보다 polling만 허용
+		forceNew: true
+	});
+
+	socket.on('connect', function () {
+		body.off('click', '.chat_start_box');
 		body.on('click', '.chat_start_box', function () {
 			var name = $('.input_box').val() ;
 			if (!name) {
@@ -196,16 +203,26 @@ $(document).ready(function(){
 				name: name
 			},function(data){
 				var tmpArr=JSON.parse(data);
-				console.log(tmpArr);
+				var objData   = tmpArr.data;
 				var objResult = tmpArr.result;
+				console.log(objData);
 				if(objResult=="t"){
+					socket.emit('NewClient', [{
+						name: objData.name,
+						rn: objData.rn,
+						msg: objData.msg,
+						time: objData.time,
+						formatted_time: objData.formatted_time,
+					}]);
 					window.open('{{DomainUri}}chat', '_blank');
 				}else{
 					pAlert(tmpArr.msg)
 				}
 			pLoadingOff();
+			});
 		});
 	});
+
 
 });
 </script>

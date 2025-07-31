@@ -483,10 +483,15 @@ body{
 
 
 .ellipsis {
-	width: 100%; /* 부모 요소의 너비에 맞춤 */
-  white-space: nowrap;        /* 줄바꿈 안 함 */
-  overflow: hidden;           /* 넘친 내용 숨김 */
-  text-overflow: ellipsis;    /* ...으로 표시 */
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ellipsis br {
+  display: none;
 }
 </style>
 
@@ -508,7 +513,7 @@ body{
 									<span class="ad_chat_ri_time_txt f_white">{{key.formatted_time}}</span>
 								</div>
 								<div class="ad_chat_ri_bot_box">
-									<span class="ad_chat_ri_txt f_white ellipsis">{{key.last_msg}}</span>
+									<span class="ad_chat_ri_txt f_white ellipsis">{{ key.last_msg|striptags }}</span>
 								</div>
 							</div>
 						</a>
@@ -687,7 +692,7 @@ $(document).ready(function () {
 		$('.user_dataTable').DataTable().destroy();
 	}
 	userDataTable=$('.user_dataTable').DataTable({
-	    "order": [[5,'desc']],
+	    "order": [[0,'desc']],
 	    "iDisplayLength":50,
 	    "ajax" : {
 	        url:DomainUri+"/AdminCon/ClientDataTable",
@@ -1217,13 +1222,14 @@ $(document).ready(function () {
 
 
 		//유저가 생성됐을때 채팅목록에 뿌리기
-		socket.on('NewClient', function(arr) {
+		socket.on('NewClient', function(payload) {
 	    	console.log('NewClient')
-	    	console.log(arr)
+	    	console.log(payload)
+			var client = Array.isArray(payload) ? payload[0] : payload;
 			var bubbleHtml = ''
 			+ '<a href="javascript:void(0);" class="ad_chat_box"'
-			+     ' data-rn="' + arr.rn + '"'
-			+     ' data-create-time="' + arr.time + '">'
+			+     ' data-rn="' + client.rn + '"'
+			+     ' data-create-time="' + client.time + '">'
 			+   '<div class="ad_chat_le_box">'
 			+     '<img src="' + DomainUri + '/source/img/icons/c_user.png"'
 			+          ' alt="유저 이미지" class="ad_chat_le_img">'
@@ -1231,15 +1237,15 @@ $(document).ready(function () {
 			+   '<div class="ad_chat_ri_box">'
 			+     '<div class="ad_chat_ri_top_box">'
 			+       '<span class="ad_chat_ri_user_txt f_white ellipsis">'
-							+ arr.name +
+							+ client.name +
 					'</span>'
 			+       '<span class="ad_chat_ri_time_txt f_white">'
-							+ arr.formattedTime +
+							+ client.formatted_time +
 					'</span>'
 			+     '</div>'
 			+     '<div class="ad_chat_ri_bot_box">'
 			+       '<span class="ad_chat_ri_txt f_white ellipsis">'
-							+ arr.msg +
+							+ client.msg +
 					'</span>'
 			+     '</div>'
 			+   '</div>'

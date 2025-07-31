@@ -34,7 +34,7 @@ server.listen(port, function () {
 });
 
 // JSON 유효성 검사
-app.use((err, req, res, next) => { 
+app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         const reqIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         const param = err.body;
@@ -92,42 +92,55 @@ io.on('connect', (socket) => {
         console.log('----------------------------------')
     });
 
-    socket.on('NewClient', (dataArray) => {
-        console.log('----------------------------------')
-        console.log('----------- NewClient -------------')
-        console.log('----------------------------------')
 
-        console.log(dataArray);
+    socket.on("NewClient", (dataArray) => {
+        console.log("----------------------------------");
+        console.log("----------- NewClient -------------");
+        console.log("----------------------------------");
 
-        const resArray = dataArray.map((data) => {
-            const { rn, msg, name = '', time } = data;
+        const resArray = dataArray
+            .map((data) => {
+            // 1) 실제 들어온 키 확인
+            console.log("data keys:", Object.keys(data));
+            console.log("formatted_time value:", data.formatted_time);
 
-            console.log('rn : ' + rn)
-            console.log('msg : ' + msg)
-            console.log('name : ' + name)
-            console.log('time : ' + time)
+            // 2) 구조분해 할당
+            const {
+                rn,
+                msg,
+                name = "",
+                time,
+                formatted_time, // 여기 이름이 정확한지 꼭 확인!
+            } = data;
 
-            // 만약 하나라도 값이 없거나 오지 않았다면 전달하지 않음
-            if (!rn || !msg || !time) {
+            // 3) Null 체크 (formatted_time 체크는 필요하면 빼도 됩니다)
+            if (!rn || !msg || !time /*|| !formatted_time*/) {
                 return null;
             }
 
-            // 채팅 쏘기
-            return { rn, msg, name, time };
-        });
+            // 4) 반드시 return 블록 안에 객체를 return
+            return {
+                rn,
+                msg,
+                name,
+                time,
+                formatted_time, // 여기서도 key: value 쌍이 맞는지!
+            };
+            })
+            // 5) null 필터
+            .filter((item) => item !== null);
 
-        // 값이 있는 객체만 filtering
-        const filteredResArray = resArray.filter((item) => item !== null);
+        console.log("resArray:", resArray);
 
-        // 필수값 다 온것만 에밋튜
-        if (filteredResArray.length > 0) {
-            io.emit('NewClient', filteredResArray);
+        if (resArray.length > 0) {
+            io.emit("NewClient", resArray);
         }
 
-        console.log('----------------------------------')
-        console.log('----------- NewClient -------------')
-        console.log('----------------------------------')
+        console.log("----------------------------------");
+        console.log("----------- NewClient -------------");
+        console.log("----------------------------------");
     });
+
     //////////////////////////////////////
     //////////// ! 양방향 ////////////////
     //////////////////////////////////////
