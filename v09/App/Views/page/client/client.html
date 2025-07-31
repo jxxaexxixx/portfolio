@@ -727,15 +727,21 @@ $(document).ready(function(){
 
 
 		socket.on('LiveChat', function(payload) {
-			//console.log('LiveChat', payload);
+			console.log('LiveChat', payload);
 
 
 			// payload를 항상 배열로 처리
 			var clients = Array.isArray(payload) ? payload : [payload];
-
+			var currentRn = String('{{ rn }}').trim();
 
 			clients.forEach(function(client) {
 				var bubbleHtml = '';
+
+				var clientRn = String(client.rn).trim();
+				if (clientRn !== currentRn) {
+				console.log('건너뜀: RN 불일치', clientRn, 'vs', currentRn);
+				return;
+				}
 
 				if (client.type === 2) {
 				// 유저 메시지
