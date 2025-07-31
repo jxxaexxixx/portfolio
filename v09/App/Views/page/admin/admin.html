@@ -261,10 +261,20 @@ body{
 	align-items: start;
 	padding-left: 7px;
 }
+.ad_ri_exit_brn{
+	display: flex;
+	align-items: center;
+}
 .ad_ri_exit_brn_img{
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
+}
+.exit_brn_txt{
+	font-size: 17px;
+	color: #fff;
+	font-weight: 500;
+	padding-left: 7px;
 }
 
 .ad_chat_de_box{
@@ -318,9 +328,30 @@ body{
 	line-height: 1.5;
 }
 
+.ad_set_user_list_cont{
+	height: 100%;
+}
 
+.ad_set_user_list_cont_txt_box{
+	height: calc(100% - 40px);
+}
 
-
+.ad_chat_user_de_del_btn_box{
+	padding: 0 10px;
+	height: 40px;
+	display: flex;
+	justify-content: flex-end;
+}
+.user_del_btn{
+	height: 28px;
+    width: 78px;
+    border-radius: 0;
+    background-color: #9c1414;
+}
+.user_del_btn span{
+	font-size: 13px;
+	font-weight: 400;
+}
 
 
 
@@ -478,20 +509,22 @@ body{
 				</div>
 				<div class="ad_set_user_list_box">
 					<div class="ad_set_user_list_cont display_none">
-						<div class="ad_set_user_list_img_box">
-							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="ad_set_user_list_img">
-						</div>
-						<div class="ad_set_user_list_txt_box">
-							<span class="ad_set_user_list_txt">닉네임</span>
-							<span class="ad_set_user_list_txt_cont"></span>
-						</div>
-						<div class="ad_set_user_list_txt_box">
-							<span class="ad_set_user_list_txt">가입일</span>
-							<span class="ad_set_user_list_txt_cont"></span>
-						</div>
-						<div class="ad_set_user_list_txt_box">
-							<span class="ad_set_user_list_txt">듣고 싶은 말</span>
-							<span class="ad_set_user_list_txt_cont"></span>
+						<div class="ad_set_user_list_cont_txt_box">
+							<div class="ad_set_user_list_img_box">
+								<img src="{{DomainUri}}/source/img/icons/c_user.png" 	alt="유저 이미지" class="ad_set_user_list_img">
+							</div>
+							<div class="ad_set_user_list_txt_box">
+								<span class="ad_set_user_list_txt">닉네임</span>
+								<span class="ad_set_user_list_txt_cont 	ad_set_user_list_username"></span>
+							</div>
+							<div class="ad_set_user_list_txt_box">
+								<span class="ad_set_user_list_txt">가입일</span>
+								<span class="ad_set_user_list_txt_cont 	ad_set_user_list_createtime"></span>
+							</div>
+							<div class="ad_set_user_list_txt_box">
+								<span class="ad_set_user_list_txt">듣고 싶은 말</span>
+								<span class="ad_set_user_list_txt_cont 	ad_set_user_list_talk"></span>
+							</div>
 						</div>
 						<div class="ad_chat_user_de_del_btn_box">
 							<a href="javascript:void(0);" class="p_btn user_del_btn">
@@ -519,23 +552,12 @@ body{
 		<div class="ad_ri_exit_wrap">
 			<a href="javascript:void(0);" class="ad_ri_exit_brn">
 				<img src="{{DomainUri}}/source/img/icons/exit.png" alt="나가기" class="ad_ri_exit_brn_img">
+				<span class="exit_brn_txt">나가기</span>
 			</a>
 		</div>
 		<div class="ad_chat_de_box">
 			<div class="ad_chat_de_cont_box">
 				<div class="ad_chat_de_cont_chat_box">
-					<div class="chat_client_msg_box chat_msg_box">
-						<div class="chat_client_msg_img_box">
-							<img src="{{DomainUri}}/source/img/icons/c_user.png" alt="유저 이미지" class="chat_client_msg_img">
-						</div>
-						<div class="chat_client_msg_sb_box">
-							<span class="chat_client_msg_text">유저채팅이에오
-							</span>
-						</div>
-						<div class="chat_client_timer_box">
-							<span class="chat_client_timer_text">25.10.10 00:00</span>
-						</div>
-					</div>
 				</div>
 				<div class="ad_chat_de_cont_send_box">
 					<textarea class="send_chat" placeholder="유저에게 보낼 내용을 입력해주세요"></textarea>
@@ -551,15 +573,15 @@ body{
 					</div>
 					<div class="ad_set_user_list_txt_box">
 						<span class="ad_set_user_list_txt">닉네임</span>
-						<span class="ad_set_user_list_username ad_set_user_list_txt_cont"></span>
+						<span class="chat_user_list_username ad_set_user_list_txt_cont"></span>
 					</div>
 					<div class="ad_set_user_list_txt_box">
 						<span class="ad_set_user_list_txt">가입일</span>
-						<span class="ad_set_user_list_createtime ad_set_user_list_txt_cont"></span>
+						<span class="chat_user_list_createtime ad_set_user_list_txt_cont"></span>
 					</div>
 					<div class="ad_set_user_list_txt_box">
 						<span class="ad_set_user_list_txt">듣고 싶은 말</span>
-						<span class="ad_set_user_list_talk ad_set_user_list_txt_cont"></span>
+						<span class="chat_user_list_talk ad_set_user_list_txt_cont"></span>
 					</div>
 				</div>
 			</div>
@@ -579,7 +601,7 @@ $(document).ready(function () {
 		$('.dataTable').DataTable().destroy();
 	}
 	dataTable=$('.dataTable').DataTable({
-	    "order": [[4,'desc']],
+	    "order": [[5,'desc']],
 	    "iDisplayLength":50,
 	    "ajax" : {
 	        url:DomainUri+"/AdminCon/ClientDataTable",
@@ -592,6 +614,7 @@ $(document).ready(function () {
 	        { "data": "status", "class":"p_td_status"},
 	        { "data": "create_time", "class":"p_td_createTime"},
 	        { "data": "talk", "class":"","visible":false},
+	        { "data": "rn", "class":"","visible":false},
 	    ],
     	"initComplete": function(settings, data, dataIndex){
     		pTableInitComplete(this,'y');
@@ -629,6 +652,9 @@ $(document).ready(function () {
  	    $box.find('.ad_set_user_list_talk')
  	       .text(data.talk);
 
+		$box.find('.user_del_btn')
+        	.attr('data-rn', data.rn);
+
  	   	// 4) (옵션) 사용자 이미지 변경하기
  	   	//    data.imageUrl 같은 프로퍼티가 있으면 넣어 주시면 됩니다.
     	// $box.find('.ad_set_user_list_img')
@@ -663,13 +689,13 @@ $(document).ready(function () {
 			if (objResult !== "t") {
     		  	return pAlert(tmpArr.msg);
     		}
-    		$('.ad_set_user_list_username')
+    		$('.chat_user_list_username')
     		    .text(objData.userName);
 
-    		$('.ad_set_user_list_createtime')
+    		$('.chat_user_list_createtime')
     		    .text(objData.userCreateTime);
 
-    		$('.ad_set_user_list_talk')
+    		$('.chat_user_list_talk')
     		    .text(objData.userTalk && objData.userTalk.trim()
     		          ? objData.userTalk
     		          : '-');
@@ -762,6 +788,12 @@ $(document).ready(function () {
 	  	});
 	}
 
+	function refreshClientTable() {
+	  	if (dataTable instanceof $.fn.dataTable.Api) {
+	  	  	dataTable.ajax.reload(null, false);
+	  	}
+	}
+
 	const socket = io.connect('{{ ChatIoUri }}', {
 		transports: ['polling'],  // 웹소켓보다 polling만 허용
 		forceNew: true
@@ -815,9 +847,7 @@ $(document).ready(function () {
         			  .find('.ad_chat_ri_txt').text(msg).end()
         			  .find('.ad_chat_ri_time_txt').text(objData.chat_list_time).end()
         			  .attr('data-create-time', objData.time);
-
         			sortChatBoxes();
-
         			$('.send_chat').val('');
 					var $chatBox = $('.ad_chat_de_cont_chat_box');
   					$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
@@ -841,21 +871,54 @@ $(document).ready(function () {
 		//관리자가 회원삭제했을때
 		body.off('click', '.user_del_btn');
 		body.on('click', '.user_del_btn', function () {
-			var rn=  $('.ad_chat_box_act').data('rn');
-			$.post(DomainUri+'/AdminCon/ClientDel',{
-				rn:rn
-			},function(data){
-				var tmpArr=JSON.parse(data);
-				var objResult = tmpArr.result;
-				var objData = tmpArr.data;
-				//console.log(tmpArr)
-				if(objResult=="t"){
-					socket.emit('ClientDelByAdmin');
-				}else{
-					pAlert(tmpArr.msg);
+			var $this = $(this);
+			if (!$this.data('rn')) {
+			    return pAlert('삭제할 회원을 선택해주세요');
+			}
+			var rn=  $this.data('rn');
+			$.confirm({
+				title:'회원 삭제',
+				content:'해당 회원을 삭제하시겠습니까? </br> 삭제된 회원은 다시 복구할 수 없으며 해당 채팅 내용은 모두 삭제됩니다.',
+				closeIcon: false,
+				useBootstrap: false,
+				backgroundDismiss: false,
+				boxWidth: '430px',
+				buttons: {
+					cancel:{
+						text:"취소",
+					},
+					'confirm': {
+						text: '확인',
+						btnClass: 'btn-blue bo_submit',
+						keys:['enter'],
+						action:function(){
+							$.post(DomainUri+'/AdminCon/ClientDel',{
+								rn:rn
+							},function(data){
+								var tmpArr=JSON.parse(data);
+								var objResult = tmpArr.result;
+								var objData = tmpArr.data;
+								if(objResult=="t"){
+									socket.emit('ClientDelByAdmin');
+									refreshClientTable();
+									pAlert('삭제가 완료되었습니다.');
+                            		$('.ad_chat_box[data-rn="' + rn + '"]').remove();
+								}else{
+									pAlert(tmpArr.msg);
+								}
+							});
+						}
+					},
 				}
 			});
+
 		});
+
+		socket.on('ClientDelByClient', function(arr) {
+	    	console.log('ClientDelByClient')
+	    	console.log(arr)
+	  	});
+
 
 		//유저가 생성됐을때 채팅목록에 뿌리기
 		socket.on('NewClient', function(arr) {

@@ -29,7 +29,7 @@ class AdminCon extends \Core\Controller
         $rn = $_POST['rn'];
         $client = ClientMo::GetClient($rn);
         if(!isset($client['idx'])||empty($client['idx'])){
-            $errMsg='잘못된 접근입니다.';
+            $errMsg='존재하지 않는 회원입니다. 새로고침 후 다시 시도해 주세요.';
             $errOn=$this::errExport($errMsg);
         }
         $client_idx=$client['idx'];
@@ -59,7 +59,7 @@ class AdminCon extends \Core\Controller
         $rn = $_POST['rn'];
         $client = ClientMo::GetClient($rn);
         if(!isset($client['idx'])||empty($client['idx'])){
-            $errMsg='잘못된 접근입니다.';
+            $errMsg='존재하지 않는 회원입니다. 새로고침 후 다시 시도해 주세요.';
             $errOn=$this::errExport($errMsg);
         }
         $create_time = date('Y-m-d H:i:s');

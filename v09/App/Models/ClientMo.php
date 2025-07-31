@@ -19,6 +19,7 @@ class ClientMo extends \Core\Model
                 DATE_FORMAT(`create_time`, '%Y-%m-%d %H:%i') AS `create_time`
             FROM `{$dbName}`.`client`
             WHERE `rn` = :rn
+                AND `type` = 2
             LIMIT 1
         ";
         $stmt = $db->prepare($sql);
@@ -81,7 +82,7 @@ class ClientMo extends \Core\Model
                         )
                     ELSE DATE_FORMAT(B.create_time, '%Y.%m.%d')
                 END AS formatted_time,
-                B.msg AS last_msg,
+                B.msg       AS last_msg,
                 B.create_time AS time
             FROM `{$dbName}`.`client` A
             LEFT JOIN (
@@ -97,12 +98,13 @@ class ClientMo extends \Core\Model
                     FROM `{$dbName}`.`chat`
                     GROUP BY client_idx
                 ) sub
-                  ON c1.client_idx   = sub.client_idx
-                 AND c1.create_time  = sub.max_ct
-            ) B                       -- AS 생략
+                  ON c1.client_idx  = sub.client_idx
+                 AND c1.create_time = sub.max_ct
+            ) B
               ON B.client_idx = A.idx
             WHERE A.manager_idx = :manager_idx
-            ORDER BY B.create_time DESC
+              AND A.type = 2
+            ORDER BY B.create_time DESC;
         ";
 
         $stmt = $db->prepare($sql);
@@ -120,6 +122,7 @@ class ClientMo extends \Core\Model
             SELECT
                 idx,
                 name,
+                rn,
                 CASE `type`
                     WHEN 2 THEN '정상'
                     WHEN 3 THEN '삭제'
