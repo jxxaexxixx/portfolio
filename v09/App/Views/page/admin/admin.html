@@ -595,6 +595,9 @@ body{
 $(document).ready(function () {
 	const body = $('body');
 
+	//const chatListData = {{ chatList|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+    //console.log('chatList:', chatListData);
+
 	var dataTable;
 	if (dataTable instanceof $.fn.dataTable.Api) {
 	    dataTable.destroy();
@@ -799,75 +802,95 @@ $(document).ready(function () {
 		forceNew: true
 	});
 
+
 	// 연결 성공 시
 	socket.on('connect', function () {
-		//관리자가 채팅쳤을때
-		body.off('click', '.chat_send_btn');
-		body.on('click', '.chat_send_btn', function (e) {
-			e.preventDefault();
-		    var msg= $.trim($('.send_chat').val());
-			var type= 'admin';
-			var rn=  $('.ad_chat_box_act').data('rn');
-			 if (!rn) {
-    		    pAlert('잘못된 접근입니다. 새로고침 후 다시 시도해주세요');
-    		    return;
-    		}
-			$.post(DomainUri+'/AdminCon/Chat',{
-				msg:msg,
-				rn:rn,
-			},function(data){
-				var tmpArr=JSON.parse(data);
+		// 이미 바인딩된 적 있으면 되돌아가서 중복 방지
+		if (window.chatHandlersBound) return;
+		window.chatHandlersBound = true;
+
+		// 1) 전송 로직을 함수로 분리
+		function sendChat() {
+			var msg  = $.trim($('.send_chat').val());
+			var rn   = $('.ad_chat_box_act').data('rn');
+			if (!msg) {
+				return ;
+			}
+			if (!rn) {
+				return pAlert('잘못된 접근입니다. 새로고침 후 다시 시도해주세요');
+			}
+
+			$.post(DomainUri + '/AdminCon/Chat', {
+				msg: msg,
+				rn:  rn
+			}, function(data){
+				var tmpArr    = JSON.parse(data);
 				var objResult = tmpArr.result;
-				var objData = tmpArr.data;
-				//console.log(tmpArr)
-				if(objResult=="t"){
-					dataFrom=[{
-						type: objData.type ,
-						chatTime: objData.formattime,
-						chatListTime: objData.chat_list_time,
-						time: objData.time,
-						msg: msg,
-						rn: rn,
-					}];
-					socket.emit('LiveChat', dataFrom);
+				var objData   = tmpArr.data;
+
+				if (objResult === "t") {
+					// 1) 소켓 전송
+					socket.emit('LiveChat', [{
+						type:             objData.type,
+						chatTime:         objData.formattime,
+						chatListTime:     objData.chat_list_time,
+						time:             objData.time,
+						msg:              msg,
+						rn:               rn
+					}]);
+
+					// 2) 상세 채팅 말풍선 추가
 					var bubbleHtml = ''
-    				  	+ '<div class="chat_admin_msg_box chat_msg_box">'
-    				  	+   '<div class="chat_admin_timer_box">'
-    				  	+     '<span class="chat_admin_timer_text">' + objData.formattime + '</span>'
-    				  	+   '</div>'
-    				  	+   '<div class="chat_admin_msg_sb_box">'
-    				  	+     '<span class="chat_admin_msg_text">' + msg + '</span>'
-    				  	+   '</div>'
-    				  	+   '<div class="chat_admin_msg_img_box">'
-    				  	+     '<img src="' + DomainUri + '/source/img/icons/man.png" '
-    				  	+          'alt="유저 이미지" class="chat_admin_msg_img">'
-    				  	+   '</div>'
-    				  	+ '</div>';
-    				$('.ad_chat_de_cont_chat_box').append(bubbleHtml);
-        			var $active = $('.ad_chat_box_act');
-        			$active
-        			  .find('.ad_chat_ri_txt').text(msg).end()
-        			  .find('.ad_chat_ri_time_txt').text(objData.chat_list_time).end()
-        			  .attr('data-create-time', objData.time);
-        			sortChatBoxes();
-        			$('.send_chat').val('');
+					+ '<div class="chat_admin_msg_box chat_msg_box">'
+					+   '<div class="chat_admin_timer_box">'
+					+     '<span class="chat_admin_timer_text">' + objData.formattime + '</span>'
+					+   '</div>'
+					+   '<div class="chat_admin_msg_sb_box">'
+					+     '<span class="chat_admin_msg_text">' + msg + '</span>'
+					+   '</div>'
+					+   '<div class="chat_admin_msg_img_box">'
+					+     '<img src="' + DomainUri + '/source/img/icons/man.png" '
+					+          'alt="유저 이미지" class="chat_admin_msg_img">'
+					+   '</div>'
+					+ '</div>';
 					var $chatBox = $('.ad_chat_de_cont_chat_box');
-  					$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
-				}else{
+					$chatBox.append(bubbleHtml)
+							.scrollTop($chatBox.prop('scrollHeight'));
+
+					// 3) 리스트 미리보기 업데이트
+					var $active = $('.ad_chat_box_act');
+					$active
+					.find('.ad_chat_ri_txt').text(msg).end()
+					.find('.ad_chat_ri_time_txt').text(objData.chat_list_time).end()
+					.attr('data-create-time', objData.time);
+					sortChatBoxes();
+
+					// 4) 입력창 초기화
+					$('.send_chat').val('');
+
+				} else {
 					pAlert(tmpArr.msg);
 				}
 			});
+		}
+
+		// 1) 클릭 바인딩 (네임스페이스 .sendChat)
+		body
+		.off('click.sendChat', '.chat_send_btn')
+		.on ('click.sendChat', '.chat_send_btn', function(e){
+			e.preventDefault();
+			sendChat();
 		});
 
-		// Enter 키로 보내기
-    	body.off('keydown', '.send_chat');
-    	body.on('keydown', '.send_chat', function(e) {
-    	    // Enter 키이고 Shift 조합이 아닐 때
-    	    if (e.key === 'Enter' && !e.shiftKey) {
-    	        e.preventDefault();               // 줄바꿈 방지
-    	        $('.chat_send_btn').trigger('click');
-    	    }
-    	});
+		// 2) Enter → sendChat (keyup으로 변경)
+		body
+		.off('keyup.sendChat', '.send_chat')
+		.on ('keyup.sendChat', '.send_chat', function(e){
+			if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			sendChat();
+			}
+		});
 
 
 		//관리자가 회원삭제했을때

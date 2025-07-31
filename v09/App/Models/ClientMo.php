@@ -55,13 +55,18 @@ class ClientMo extends \Core\Model
     {
         $managerIdx = (int)$data;
         $db         = static::GetMainDB();
-        $dbName = self::MainDBName;
+        $dbName     = self::MainDBName;
 
         $sql = "
             SELECT
                 A.idx,
                 A.name,
                 A.rn,
+
+                -- raw create_time
+                B.create_time AS time,
+
+                -- 포맷된 시간
                 CASE
                     WHEN DATE(B.create_time) = CURRENT_DATE() THEN
                         CONCAT(
@@ -82,34 +87,34 @@ class ClientMo extends \Core\Model
                         )
                     ELSE DATE_FORMAT(B.create_time, '%Y.%m.%d')
                 END AS formatted_time,
-                B.msg       AS last_msg,
-                B.create_time AS time
-            FROM `{$dbName}`.`client` A
-            LEFT JOIN (
-                SELECT
-                    c1.client_idx,
-                    c1.msg,
-                    c1.create_time
-                FROM `{$dbName}`.`chat` c1
-                JOIN (
-                    SELECT
-                        client_idx,
-                        MAX(create_time) AS max_ct
-                    FROM `{$dbName}`.`chat`
-                    GROUP BY client_idx
-                ) sub
-                  ON c1.client_idx  = sub.client_idx
-                 AND c1.create_time = sub.max_ct
-            ) B
-              ON B.client_idx = A.idx
+
+                B.msg AS last_msg
+
+            FROM `{$dbName}`.`client` AS A
+
+            /*
+            * 최신 메시지 한 건만 idx 기준으로 뽑아서 조인
+            * (서브쿼리 내부에 LIMIT 1 이 보장되므로 중복이 절대 없습니다)
+            */
+            LEFT JOIN `{$dbName}`.`chat` AS B
+            ON B.idx = (
+                SELECT C.idx
+                FROM `{$dbName}`.`chat` AS C
+                WHERE C.client_idx = A.idx
+                ORDER BY C.create_time DESC, C.idx DESC
+                LIMIT 1
+            )
+
             WHERE A.manager_idx = :manager_idx
-              AND A.type = 2
-            ORDER BY B.create_time DESC;
+            AND A.type        = 2
+
+            ORDER BY B.create_time DESC
         ";
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':manager_idx', $managerIdx, PDO::PARAM_INT);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
