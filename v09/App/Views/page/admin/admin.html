@@ -648,10 +648,12 @@ body{
 				<div class="ad_chat_de_cont_chat_box">
 				</div>
 				<div class="ad_chat_de_cont_send_box">
-					<textarea class="send_chat" placeholder="유저에게 보낼 내용을 입력해주세요"></textarea>
-					<div class="chat_send_btn_box">
-						<button type="button" class="chat_send_btn p_btn">전송</button>
-					</div>
+					<form id="chatForm">
+						<textarea class="send_chat" placeholder="유저에게 보낼 내용을 입력해주세요"></textarea>
+						<div class="chat_send_btn_box">
+							<button type="button" class="chat_send_btn p_btn">전송</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div class="ad_set_user_list_box ad_chat_de_cont_user_box">
@@ -970,6 +972,7 @@ $(document).ready(function () {
 			// 1) 채팅 박스 컨테이너 가져와서 초기화
     		var $chatBox = $('.ad_chat_de_cont_chat_box');
     		$chatBox.empty();
+			console.log(objData.chatList)
 			// 2) chatList 순회하며 말풍선 생성
     		$.each(objData.chatList, function(i, chat){
     		  	var bubbleHtml = '';
@@ -1108,8 +1111,8 @@ $(document).ready(function () {
 					// 1) 소켓 전송
 					socket.emit('LiveChat', [{
 						type:             objData.type,
-						chatTime:         objData.formattime,
-						chatListTime:     objData.chat_list_time,
+						formattime:         objData.formattime,
+						chat_list_time:     objData.chat_list_time,
 						time:             objData.time,
 						msg:              msg,
 						rn:               rn
@@ -1150,21 +1153,37 @@ $(document).ready(function () {
 			});
 		}
 
-		// 1) 클릭 바인딩 (네임스페이스 .sendChat)
-		body
-		.off('click.sendChat', '.chat_send_btn')
-		.on ('click.sendChat', '.chat_send_btn', function(e){
+		$('#chatForm')
+		.off('submit.chat')
+		.on ('submit.chat', function(e){
 			e.preventDefault();
 			sendChat();
 		});
 
-		// 2) Enter → sendChat (keyup으로 변경)
+		let isThrottled = false;
+
+		function throttledSendChat() {
+		if (isThrottled) return;
+		isThrottled = true;
+		setTimeout(() => {
+			sendChat();
+			isThrottled = false;
+		}, 300);
+		}
+
+		body
+		.off('click.sendChat', '.chat_send_btn')
+		.on ('click.sendChat', '.chat_send_btn', function(e){
+			e.preventDefault();
+			throttledSendChat();
+		});
+
 		body
 		.off('keyup.sendChat', '.send_chat')
 		.on ('keyup.sendChat', '.send_chat', function(e){
 			if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault();
-			sendChat();
+			throttledSendChat();
 			}
 		});
 
@@ -1254,42 +1273,72 @@ $(document).ready(function () {
         	sortChatBoxes();
 	  	});
 
-		socket.on('LiveChat', function(arr) {
-	    	console.log('LiveChat')
-	    	console.log(arr)
-			if (arr.type === 2) {
-				var $active = $('.ad_chat_box_act');
-				if ($active.length > 0) {
-					//채팅방안에 채팅뿌리기
-					var bubbleHtml = '';
-					// 유저 메시지
-					bubbleHtml = ''
+		socket.on('LiveChat', function(payload) {
+			console.log('LiveChat', payload);
+
+			// payload를 항상 배열로 처리
+			var clients = Array.isArray(payload) ? payload : [payload];
+
+			// 캐싱
+			var $activeBox      = $('.ad_chat_box_act');
+			var $chatContainer  = $('.ad_chat_de_cont_chat_box');
+
+			clients.forEach(function(client) {
+				var bubbleHtml = '';
+
+				// ── 1) 말풍선 생성 ──
+				if (client.type === 2) {
+				// 유저 메시지
+				bubbleHtml = ''
 					+ '<div class="chat_client_msg_box chat_msg_box">'
 					+   '<div class="chat_client_msg_img_box">'
 					+     '<img src="' + DomainUri + '/source/img/icons/c_user.png" '
 					+          'alt="유저 이미지" class="chat_client_msg_img">'
 					+   '</div>'
 					+   '<div class="chat_client_msg_sb_box">'
-					+     '<span class="chat_client_msg_text">' + arr.msg + '</span>'
+					+     '<span class="chat_client_msg_text">' + client.msg + '</span>'
 					+   '</div>'
 					+   '<div class="chat_client_timer_box">'
-					+     '<span class="chat_client_timer_text">' + arr.chatTime + 	'</span>'
+					+     '<span class="chat_client_timer_text">' + client.formattime + '</span>'
 					+   '</div>'
 					+ '</div>';
-					var $chatBox = $('.ad_chat_de_cont_chat_box');
-					$chatBox.append(bubbleHtml);
-					var $chatBox = $('.ad_chat_de_cont_chat_box');
-  					$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
 				}
-				//채팅리스트에 최신댓글이랑 시간 뿌리기
-				var $item = $('.ad_chat_box[data-rn="' + arr.rn + '"]');
+				else if (client.type === 1) {
+				// 관리자 메시지
+				bubbleHtml = ''
+					+ '<div class="chat_admin_msg_box chat_msg_box">'
+					+   '<div class="chat_admin_timer_box">'
+					+     '<span class="chat_admin_timer_text">' + client.formattime + '</span>'
+					+   '</div>'
+					+   '<div class="chat_admin_msg_sb_box">'
+					+     '<span class="chat_admin_msg_text">' + client.msg + '</span>'
+					+   '</div>'
+					+   '<div class="chat_admin_msg_img_box">'
+					+     '<img src="' + DomainUri + '/source/img/icons/man.png" '
+					+          'alt="관리자 이미지" class="chat_admin_msg_img">'
+					+   '</div>'
+					+ '</div>';
+				}
+
+				// 활성 방 안이라면 말풍선 추가 & 스크롤
+				if ($activeBox.length && bubbleHtml) {
+				$chatContainer.append(bubbleHtml)
+								.scrollTop($chatContainer.prop('scrollHeight'));
+				}
+
+				// ── 2) 채팅 리스트 최신화 ──
+				var $item = $('.ad_chat_box[data-rn="' + client.rn + '"]');
+				if ($item.length) {
 				$item
-				.find('.ad_chat_ri_txt').text(arr.msg).end()
-				.find('.ad_chat_ri_time_txt').text(arr.chatListTime).end()
-				.attr('data-create-time', arr.time);
-        		sortChatBoxes();
-			}
-	  	});
+					.find('.ad_chat_ri_txt').text(client.msg).end()
+					.find('.ad_chat_ri_time_txt').text(client.chatListTime).end()
+					.attr('data-create-time', client.time);
+				}
+			});
+
+			// ── 3) 다시 정렬 ──
+			sortChatBoxes();
+		});
 
 	});
 

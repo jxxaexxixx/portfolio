@@ -10,12 +10,12 @@ class ChatMo extends \Core\Model
         $client_idx=$data;
         $db     = static::GetMainDB();
         $dbName = self::MainDBName;
-       $Sel = $db->prepare("
+        $Sel = $db->prepare("
             SELECT
                 idx,
                 type,
                 msg,
-                create_time
+                DATE_FORMAT(create_time, '%y.%m.%d %H:%i') AS create_time
             FROM `{$dbName}`.`chat`
             WHERE client_idx = :client_idx
         ");

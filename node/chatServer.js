@@ -54,42 +54,28 @@ io.on('connect', (socket) => {
     console.log('socketID :' + socket.id)
 
     // 실시간 채팅
-    socket.on('LiveChat', (dataArray, rn) => {
-        console.log('----------------------------------')
-        console.log('----------- LiveChat -------------')
-        console.log('----------------------------------')
+    socket.on("LiveChat", (dataArray, rn) => {
+        console.log("----------------------------------");
+        console.log("----------- LiveChat -------------");
+        console.log("----------------------------------");
 
         console.log(dataArray);
 
-        const resArray = dataArray.map((data) => {
-            const { rn, type, msg, name = '', time} = data;
-            console.log('rn : ' + rn)
-            console.log('type : ' + type)
-            console.log('msg : ' + msg)
-            console.log('name : ' + name)
-            console.log('time : ' + time)
-
-            // 만약 하나라도 값이 없거나 오지 않았다면 전달하지 않음
-            if (!rn || !type || !msg || !time) {
-                return null;
-            }
-
-            // 채팅 쏘기
-            return {rn, type, msg, name, time};
-        });
-
-        // 값이 있는 객체만 filtering
-        const filteredResArray = resArray.filter((item) => item !== null);
-
-        // 필수값 다 온것만 에밋튜
-        if (filteredResArray.length > 0) {
-            io.to(rn).emit('LiveChat', filteredResArray); // 해당 룸에 메시지 전달
-            io.emit('LiveChat', filteredResArray);
+        // 받은 데이터가 배열인지, 비어있지 않은지 확인
+        if (!Array.isArray(dataArray) || dataArray.length === 0) {
+            return;
         }
 
-        console.log('----------------------------------')
-        console.log('----------- LiveChat -------------')
-        console.log('----------------------------------')
+        // room id: 파라미터 rn 또는 dataArray[0].rn 중 하나를 사용
+        const roomId = rn || dataArray[0].rn;
+
+        // 배열 자체를 그대로 전달
+        io.to(roomId).emit("LiveChat", dataArray);
+        io.emit("LiveChat", dataArray);
+
+        console.log("----------------------------------");
+        console.log("----------- LiveChat -------------");
+        console.log("----------------------------------");
     });
 
 

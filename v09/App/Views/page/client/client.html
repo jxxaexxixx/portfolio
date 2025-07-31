@@ -165,6 +165,10 @@ body{
 .chat_bottom_box{
 	width: 100%;
 	height: 60px;
+}
+#chatForm{
+	width: 100%;
+	height: 60px;
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
@@ -184,11 +188,11 @@ body{
 	border: 2px solid #725CAD;
 	border-radius: 10px;
 	padding: 5px 9px;
-}
-.chat_input_box input{
-  	background-color: transparent;
+	font-weight: 500;
+	background-color: transparent;
   	transition: background-color 0.3s ease;
 }
+
 
 .chat_input_box input:focus{
   	background-color: #725cad29;
@@ -278,7 +282,7 @@ body{
 }
 
 .box_main{
-	padding: 10px 5px 0;
+	padding: 10px 5px 20px 5px;
 	height: calc(100% - 60px);
 	overflow-y: auto;
 }
@@ -431,6 +435,13 @@ body{
 	cursor: pointer;
 }
 
+.chat_time_box{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0 7px 10px 7px;
+}
+
 </style>
 
 <div class="main_wrap">
@@ -445,35 +456,50 @@ body{
 			</span>
 		</div>
 		<div class="content_wrap">
-			<div class="box_wrap ">
+			<div class="box_wrap info_open_wrap">
 				<div class="box_main">
-					<div class="chat_box chat_admin_box">
-						<div class="icon">
-							<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+					{% if chatList %}
+					{% for key in chatList %}
+						{% if key.type == 1 %}
+						<div class="chat_box chat_admin_box">
+							<div class="icon">
+								<img src="{{DomainUri}}source/img/icons/man.png" alt="">
+							</div>
+							<div class="txt_box">
+								<pre class="chat_txt">{{ key.msg|raw }}</pre>
+							</div>
+							<div class="chat_time_box">
+								<span>{{ key.create_time }}</span>
+							</div>
 						</div>
-						<div class="txt_box">
-							<pre class="chat_txt">{{msg}}</pre>
+						{% else %}
+						<div class="chat_box chat_user_box">
+							<div class="icon">
+								<img src="{{DomainUri}}source/img/icons/c_user.png" alt="">
+							</div>
+							<div class="txt_box">
+								<pre class="chat_txt">{{ key.msg|raw }}</pre>
+							</div>
+							<div class="chat_time_box">
+								<span>{{ key.create_time }}</span>
+							</div>
 						</div>
-					</div>
-					<div class="chat_box chat_user_box">
-						<div class="icon">
-							<img src="{{DomainUri}}source/img/icons/c_user.png" alt="">
-						</div>
-						<div class="txt_box">
-							<pre class="chat_txt">안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요</pre>
-						</div>
-					</div>
+						{% endif %}
+					{% endfor %}
+					{% endif %}
 				</div>
 				<div class="chat_bottom_box">
-					<div class="chat_input_box">
-						<input type="text" class="send_input">
-					</div>
-					<div class="send_btn_box">
-						<button class="send_btn">전송</button>
-					</div>
+					<form id="chatForm">
+						<div class="chat_input_box">
+							<input type="text" class="send_input">
+						</div>
+						<div class="send_btn_box">
+							<button class="send_btn">전송</button>
+						</div>
+					</form>
 				</div>
 			</div>
-			<div class="info_open_btn_box ">
+			<div class="info_open_btn_box display_none">
 				<button class="info_open_btn">
 					&lt;<br>
 					내<br>
@@ -481,7 +507,7 @@ body{
 					보
 				</button>
 			</div>
-			<div class="info_wrap info_wrap_show display_none">
+			<div class="info_wrap info_wrap_show ">
 				<div class="info_box">
 					<div class="info_de_box">
 						<div class="info_de_top_box">
@@ -495,11 +521,13 @@ body{
 							<div class="info_de_cont_box">
 								<div class="info_input_box">
 									<span>닉네임</span>
-									<input type="text">
+									<input type="text" value="{{name}}">
 								</div>
 								<div class="info_input_box">
 									<span>듣고 싶은 말</span>
-									<textarea name="" id=""></textarea>
+									<textarea
+									placeholder="듣고 싶은 말을 입력해 주세요.&#10;채팅을 전송할 때마다 저희가 그 말을 대신 전해드립니다."
+									>{{ talk }}</textarea>
 								</div>
 							</div>
 						</div>
@@ -528,6 +556,13 @@ body{
 <script type="text/javascript">
 $(document).ready(function(){
 	const body   = $('body');
+	const rn = {{ rn|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+
+	var $chatBox = $('.box_main');
+	$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
+
+	//const chatListData = {{ chatList|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+    //console.log('chatList:', chatListData);
 
 	$('.info_open_btn').on('click', function(){
 		$('.info_open_btn_box')
@@ -553,20 +588,127 @@ $(document).ready(function(){
 	});
 
 
-	const socket = io.connect( '{{ ChatIoUri }}', {transports: ['polling'],});
+	const socket = io.connect('{{ ChatIoUri }}', {
+		transports: ['polling'],  // 웹소켓보다 polling만 허용
+		forceNew: true
+	});
 
 	socket.on('connect', function() {
-		const socketID = socket.id
+		// 이미 바인딩된 적 있으면 되돌아가서 중복 방지
+		if (window.chatHandlersBound) return;
+		window.chatHandlersBound = true;
 
-		client_data = [{
-			rn   : "{{rn}}",
-			name : "{{name}}",
-			msg  : `{{msg}}`,
-			time : "{{start_time}}"
-		}]
 
-		console.log(client_data)
-		socket.emit('NewClient', client_data);
+		// 1) 전송 로직을 함수로 분리
+		function sendChat() {
+			var msg  = $.trim($('.send_input').val());
+			if (!msg) {
+				return ;
+			}
+			if (!rn) {
+				return pAlert('잘못된 접근입니다. 새로고침 후 다시 시도해주세요');
+			}
+
+			$.post(DomainUri + '/ClientCon/Chat', {
+				msg: msg,
+				rn:  rn
+			}, function(data){
+				var tmpArr    = JSON.parse(data);
+				var objResult = tmpArr.result;
+				var objData   = tmpArr.data;
+
+				if (objResult === "t") {
+					socket.emit('LiveChat', objData);
+					$('.send_input').val('');
+				} else {
+					pAlert(tmpArr.msg);
+				}
+			});
+		}
+
+		$('#chatForm')
+		.off('submit.chat')
+		.on ('submit.chat', function(e){
+			e.preventDefault();
+			sendChat();
+		});
+
+		let isThrottled = false;
+
+		function throttledSendChat() {
+		if (isThrottled) return;
+		isThrottled = true;
+		setTimeout(() => {
+			sendChat();
+			isThrottled = false;
+		}, 300);
+		}
+
+		body
+		.off('click.sendChat', '.send_btn')
+		.on ('click.sendChat', '.send_btn', function(e){
+			e.preventDefault();
+			throttledSendChat();
+		});
+
+		body
+		.off('keyup.sendChat', '.send_input')
+		.on ('keyup.sendChat', '.send_input', function(e){
+			if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			throttledSendChat();
+			}
+		});
+
+		socket.on('LiveChat', function(payload) {
+			console.log('LiveChat', payload);
+
+			// payload를 항상 배열로 처리
+			var clients = Array.isArray(payload) ? payload : [payload];
+
+
+			clients.forEach(function(client) {
+				var bubbleHtml = '';
+
+				if (client.type === 2) {
+				// 유저 메시지
+				bubbleHtml = ''
+					+ '<div class="chat_box chat_user_box">'
+					+ 	'<div class="icon">'
+					+ 	'<img src="' + DomainUri + 'source/img/icons/c_user.png"alt="">'
+					+ 	'</div>'
+					+ 	'<div class="txt_box">'
+					+ 	'<pre class="chat_txt">' + client.msg + '</pre>'
+					+ 	'</div>'
+					+ 	'<div class="chat_time_box">'
+					+ 	'<span>' + client.formattime + '</span>'
+					+ 	'</div>'
+					+ '</div>';
+				}
+				else if (client.type === 1) {
+				// 관리자 메시지
+				bubbleHtml = ''
+					+ '<div class="chat_box chat_admin_box">'
+					+ 	'<div class="icon">'
+					+ 	'<img src="' + DomainUri + 'source/img/icons/man.png"alt="">'
+					+ 	'</div>'
+					+ 	'<div class="txt_box">'
+					+ 	'<pre class="chat_txt">' + client.msg + '</pre>'
+					+ 	'</div>'
+					+ 	'<div class="chat_time_box">'
+					+ 	'<span>' + client.formattime + '</span>'
+					+ 	'</div>'
+					+ '</div>';
+				}
+				$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
+
+				// 활성 방 안이라면 말풍선 추가 & 스크롤
+				if (bubbleHtml) {
+				$('.box_main').append(bubbleHtml)
+								.scrollTop($('.box_main').prop('scrollHeight'));
+				}
+			});
+		});
 
 	});
 

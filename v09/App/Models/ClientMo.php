@@ -30,7 +30,8 @@ class ClientMo extends \Core\Model
 
     public static function ClientNameChk($data = null)
     {
-        $name    = $data;
+        $name    = $data['name'];
+        $manager_idx    = $data['manager_idx'];
         $db      = static::GetMainDB();
         $dbName  = self::MainDBName;
 
@@ -39,13 +40,18 @@ class ClientMo extends \Core\Model
                 `idx`,
                 `rn`,
                 `type`,
+                `talk`,
                 `manager_idx`
             FROM `{$dbName}`.`client`
-            WHERE `name` = :name
+            WHERE
+                `name` = :name
+                AND `manager_idx` = :manager_idx
+                AND `type` = 2
             LIMIT 1
         ";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':manager_idx', $manager_idx, PDO::PARAM_STR);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;

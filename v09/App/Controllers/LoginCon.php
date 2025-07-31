@@ -17,17 +17,22 @@ class LoginCon extends \Core\Controller
     {
         if(!$_POST['name']) $this::errExport('닉네임을 입력해 주세요.');
         $name = $_POST['name'];
+        // 매니저IDX 찾기
+        $GlobalsValGroup = new \Core\GlobalsVariable;
+        $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
         setcookie('name', $name, time() + 36000, "/");
+        $arr = [
+            'name'=>$name,
+            'manager_idx'=>$managerIdx,
+        ];
 
-        $clientChk = ClientMo::ClientNameChk($name);
+        $clientChk = ClientMo::ClientNameChk($arr);
         if ($clientChk) $this::errExport('중복된 닉네임입니다.');
 
         // 채팅에 쓸 룸네임 발번
         $rn = $this->MakeRandomString();
 
-        // 매니저IDX 찾기
-        $GlobalsValGroup = new \Core\GlobalsVariable;
-        $managerIdx      = $GlobalsValGroup->GetGlobals('managerIdx');
+
         $create_time = date('Y-m-d H:i:s');
 
         // 디비 인서트
@@ -57,11 +62,9 @@ class LoginCon extends \Core\Controller
         $msg .= '또한, 자동응답 명령어로 다양한 정보를 확인하실 수 있어요.<br><br>';
         $msg .= '!소개 — 제작자 소개<br>';
         $msg .= '!스택 — 기술 스택 안내<br>';
-        $msg .= '!프로젝트 — 참여 프로젝트 목록<br>';
         $msg .= '!성장과정 — 취업 후 성장과정<br>';
         $msg .= '!강점 — 주요 강점 소개<br>';
         $msg .= '!연락처 — 연락 방법 안내<br>';
-        $msg .= '!링크 — 외부 링크 모음<br>';
         $msg .= '!포폴 — 포트폴리오 소개';
 
         $insert2 = $db->prepare("
