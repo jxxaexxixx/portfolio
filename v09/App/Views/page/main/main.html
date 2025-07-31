@@ -9,9 +9,14 @@
   --bgcolor: #3C3C3C;
   --btn_w_color: #fff;
 }
+.jconfirm .jconfirm-box div.jconfirm-content-pane .jconfirm-content {
+    overflow: hidden;
+}
 body{
 	width: 100vw;
 	height: 100vh;
+	min-width: 1000px;
+	min-height: 600px;
 }
 
 .center_box{
@@ -24,7 +29,7 @@ body{
   width: 100%;
   height: 100%;
   background-color: var(--bgcolor);
-  padding-top: 10vh;
+  padding-top: 20vh;
   padding-left: 6vw;
 }
 
@@ -35,12 +40,21 @@ body{
 	line-height: 45px;
 }
 
-.btn_box{
-	height: 100px;
-	max-width: 300px;
-	width: 80vw;
-	background-color: var(--btn_w_color);
-	border-radius: 30px;
+.btn_box {
+  height: 100px;
+  max-width: 300px;
+  width: 80vw;
+  background-color: var(--btn_w_color);
+  border-radius: 30px;
+  transition:
+    transform 0.3s ease,
+    filter    0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.btn_box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .btn_txt{

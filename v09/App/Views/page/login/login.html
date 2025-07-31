@@ -12,7 +12,7 @@
 body{
 	width: 100vw;
 	height: 100vh;
-	min-width: 1000px;
+	min-width: 1100px;
 	min-height: 600px;
 }
 
@@ -31,16 +31,16 @@ body{
 }
 
 .box_top_txt{
-	font-size: 24px;
-	font-weight: 600;
+	font-size: 21px;
+	font-weight: 400;
 	color: #fff;
-	margin-bottom: 24px;
+	margin: 0 0 13px 4px;
 }
 
 .info_txt{
-	font-size: 22px;
+	font-size: 18px;
 	color: #A393CF;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 45px;
 }
 
@@ -50,6 +50,15 @@ body{
 	width: 80vw;
 	background-color: var(--btn_w_color);
 	border-radius: 30px;
+	transition:
+    transform 0.3s ease,
+    filter    0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.btn_box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .btn_txt{
@@ -61,7 +70,7 @@ body{
 .box_wrap{
 	display: flex;
 	align-items: flex-end;
-	margin-top: 60px;
+	padding-top: 20px;
 }
 
 .input_box{
@@ -71,7 +80,7 @@ body{
 	background-color: #e2e2e2;
 	border-radius: 30px;
 	border: 6px solid #fff;
-	margin-right: 60px;
+	margin-right: 35px;
 	padding: 10px;
 	font-size: 42px;
 	color: var(--bgcolor);
@@ -79,8 +88,7 @@ body{
 }
 
 .box_middle_wrap{
-	margin-top: 80px;
-	margin-bottom: 80px;
+	padding: 40px 0;
 }
 
 .box_middle_wrap .btn_box{
@@ -90,21 +98,26 @@ body{
 }
 
 .box_bottom_wrap{
-	margin-top: 40px;
+	padding-top: 20px;
 	display: flex;
 	align-items: stretch;
 	max-width: 80vw;
 }
+.box_bottom_wrap a:hover{
+	color: #fff !important;;
+	font-weight: 500;
+}
 
 .w_txt{
-	font-size: 18px;
-	font-weight: 600;
+	font-size: 17px;
+	font-weight: 400;
 	color: #fff;
+	line-height: 1.4;
 }
 
 .link_title{
 	width: 100px;
-	margin-right: 45px;
+	margin-right: 25px;
 }
 </style>
 
@@ -127,7 +140,8 @@ body{
 			<p><span class="box_top_txt">
 				유저들이 남긴 채팅 내역을 확인해 보세요
 			</span></p>
-		<a href="{{DomainUri}}admin" class="btn_box center_box">
+		<a href="{{DomainUri}}admin" target="_blank"
+		rel="noopener noreferrer" class="btn_box center_box">
 			<span class="btn_txt">GO 채팅 관리자 페이지</span>
 		</a>
 	</div>
@@ -135,7 +149,8 @@ body{
 		<p><span class="w_txt link_title">
 			깃허브 링크
 			</span></p>
-		<a href="{{DomainUri}}/login">
+		<a href="https://github.com/jxxaexxixx/portfolio" target="_blank"
+		rel="noopener noreferrer">
 			<span class="w_txt">https://github.com/jxxaexxixx/portfolio</span>
 		</a>
 	</div>
@@ -143,17 +158,25 @@ body{
 		<p><span class="w_txt link_title">
 				피그마 링크
 			</span></p>
-		<a href="{{DomainUri}}/login">
-			<span class="w_txt">https://www.figma.com/design/Hx7kwtmhCqia6EYFDH5WJg/%EB%B0%95%
-			EC%A0%9C%EC%9D%B4?node-id=2103-2&t=81JyPUgZJJ6j0jFx-1</span>
+		<a
+		href="https://www.figma.com/design/Hx7kwtmhCqia6EYFDH5WJg/%EB%B0%95%EC%A0%9C%EC%9D%B4?node-id=2103-2&t=81JyPUgZJJ6j0jFx-1"
+		target="_blank"
+		rel="noopener noreferrer"
+		>
+		<span class="w_txt">
+			https://www.figma.com/design/Hx7kwtmhCqia6EYFDH5WJg/%EB%B0%95%
+			EC%A0%9C%EC%9D%B4?node-id=2103-2&t=81JyPUgZJJ6j0jFx-1
+		</span>
 		</a>
 	</div>
 	<div class="box_bottom_wrap">
 			<p><span class="w_txt link_title">
 				erdcloud
 			</span></p>
-		<a href="{{DomainUri}}/login">
-			<span class="w_txt">https://github.com/jxxaexxixx/portfolio</span>
+		<a href="https://www.erdcloud.com/d/k7qsm4axfipePh3iY"
+		target="_blank"
+		rel="noopener noreferrer">
+			<span class="w_txt">https://www.erdcloud.com/d/k7qsm4axfipePh3iY</span>
 		</a>
 	</div>
 </div>
@@ -176,7 +199,7 @@ $(document).ready(function(){
 				console.log(tmpArr);
 				var objResult = tmpArr.result;
 				if(objResult=="t"){
-					window.location.href = '{{DomainUri}}chat';
+					window.open('{{DomainUri}}chat', '_blank');
 				}else{
 					pAlert(tmpArr.msg)
 				}
