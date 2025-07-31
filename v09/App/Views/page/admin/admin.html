@@ -823,6 +823,8 @@ $(document).ready(function () {
 				if(objResult=="t"){
 					dataFrom=[{
 						type: objData.type ,
+						chatTime: objData.formattime,
+						chatListTime: objData.chat_list_time,
 						time: objData.time,
 						msg: msg,
 						rn: rn,
@@ -915,8 +917,8 @@ $(document).ready(function () {
 		});
 
 		socket.on('ClientDelByClient', function(arr) {
-	    	console.log('ClientDelByClient')
-	    	console.log(arr)
+	    	//console.log('ClientDelByClient')
+	    	$('.ad_chat_box[data-rn="' + arr.rn + '"]').remove();
 	  	});
 
 
@@ -924,13 +926,69 @@ $(document).ready(function () {
 		socket.on('NewClient', function(arr) {
 	    	console.log('NewClient')
 	    	console.log(arr)
+			var bubbleHtml = ''
+			+ '<a href="javascript:void(0);" class="ad_chat_box"'
+			+     ' data-rn="' + arr.rn + '"'
+			+     ' data-create-time="' + arr.time + '">'
+			+   '<div class="ad_chat_le_box">'
+			+     '<img src="' + DomainUri + '/source/img/icons/c_user.png"'
+			+          ' alt="유저 이미지" class="ad_chat_le_img">'
+			+   '</div>'
+			+   '<div class="ad_chat_ri_box">'
+			+     '<div class="ad_chat_ri_top_box">'
+			+       '<span class="ad_chat_ri_user_txt f_white ellipsis">'
+							+ arr.name +
+					'</span>'
+			+       '<span class="ad_chat_ri_time_txt f_white">'
+							+ arr.formattedTime +
+					'</span>'
+			+     '</div>'
+			+     '<div class="ad_chat_ri_bot_box">'
+			+       '<span class="ad_chat_ri_txt f_white ellipsis">'
+							+ arr.msg +
+					'</span>'
+			+     '</div>'
+			+   '</div>'
+			+ '</a>';
+			$('.ad_chat_list_wrap').prepend(bubbleHtml);
+        	sortChatBoxes();
 	  	});
 
 		socket.on('LiveChat', function(arr) {
 	    	console.log('LiveChat')
 	    	console.log(arr)
-			//채팅방안에 채팅뿌리기
-			//채팅리스트에 최신댓글이랑 시간 뿌리기
+			if (arr.type === 2) {
+				var $active = $('.ad_chat_box_act');
+				if ($active.length > 0) {
+					//채팅방안에 채팅뿌리기
+					var bubbleHtml = '';
+					// 유저 메시지
+					bubbleHtml = ''
+					+ '<div class="chat_client_msg_box chat_msg_box">'
+					+   '<div class="chat_client_msg_img_box">'
+					+     '<img src="' + DomainUri + '/source/img/icons/c_user.png" '
+					+          'alt="유저 이미지" class="chat_client_msg_img">'
+					+   '</div>'
+					+   '<div class="chat_client_msg_sb_box">'
+					+     '<span class="chat_client_msg_text">' + arr.msg + '</span>'
+					+   '</div>'
+					+   '<div class="chat_client_timer_box">'
+					+     '<span class="chat_client_timer_text">' + arr.chatTime + 	'</span>'
+					+   '</div>'
+					+ '</div>';
+					var $chatBox = $('.ad_chat_de_cont_chat_box');
+					$chatBox.append(bubbleHtml);
+					var $chatBox = $('.ad_chat_de_cont_chat_box');
+  					$chatBox.scrollTop( $chatBox.prop('scrollHeight') );
+				}
+				//채팅리스트에 최신댓글이랑 시간 뿌리기
+				var $item = $('.ad_chat_box[data-rn="' + arr.rn + '"]');
+				$item
+				.find('.ad_chat_ri_txt').text(arr.msg).end()
+				.find('.ad_chat_ri_time_txt').text(arr.chatListTime).end()
+				.attr('data-create-time', arr.time);
+        		sortChatBoxes();
+			}
 	  	});
 
 	});
