@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<link rel="stylesheet" href="{{DomainUri}}/source/css/client.css">
+<link rel="stylesheet" href="{{DomainUri}}/source/css/admin.css?v={{ "now"|date("Y-m-d H:i:s") }}">
 
 <style>
 :root {
@@ -397,6 +397,9 @@ body{
 	padding: 5px;
 
 }
+.info_input_box textarea::placeholder {
+  color: #c6c6c6ff;
+}
 
 .info_input_box input,
 .info_input_box textarea {
@@ -521,20 +524,27 @@ body{
 							<div class="info_de_cont_box">
 								<div class="info_input_box">
 									<span>닉네임</span>
-									<input type="text" value="{{name}}">
+									<input
+										type="text"
+										class="info_name"
+										data-val="{{ name }}"
+										value="{{ name }}"
+									>
 								</div>
 								<div class="info_input_box">
 									<span>듣고 싶은 말</span>
 									<textarea
-									placeholder="듣고 싶은 말을 입력해 주세요.&#10;채팅을 전송할 때마다 저희가 그 말을 대신 전해드립니다."
+										class="info_talk"
+										data-val="{{ talk }}"
+										placeholder="듣고 싶은 말을 입력해 주세요.&#10;채팅을 전송할 때마다 저희가 그 말을 대신 전해드립니다."
 									>{{ talk }}</textarea>
 								</div>
 							</div>
 						</div>
 						<div class="info_de_bot_box">
-							<div class="info_user_del_btn_box">
+							{# <div class="info_user_del_btn_box">
 								<button class="user_del_btn">회원 삭제</button>
-							</div>
+							</div> #}
 						</div>
 					</div>
 					<div class="info_save_btn_box">
@@ -555,6 +565,8 @@ body{
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
+
+
 	const body   = $('body');
 	const rn = {{ rn|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
 
@@ -587,6 +599,76 @@ $(document).ready(function(){
 		.removeClass('display_none');
 	});
 
+	body.off('click', '.info_save_btn');
+	body.on('click', '.info_save_btn', function () {
+	var name = $.trim($('.info_name').val() || '');
+	var talk = $.trim($('.info_talk').val() || '');
+
+	var ogName = String($('.info_name').attr('data-val') || '');
+	var ogTalk = String($('.info_talk').attr('data-val') || '');
+
+	var type = (name === ogName) ? 2 : 3;
+
+	if (name === ogName && talk === ogTalk) {
+		pAlert('변경된 내용이 없습니다.');
+		return;
+	}
+
+	$.confirm({
+		title: '내 정보 저장',
+		content: '해당 정보를 저장하시겠습니까?',
+		closeIcon: false,
+		useBootstrap: false,
+		backgroundDismiss: false,
+		boxWidth: '430px',
+		buttons: {
+		cancel: {
+			text: "취소",
+		},
+		confirm: {
+			text: '확인',
+			btnClass: 'btn-blue bo_submit',
+			keys: ['enter'],
+			action: function() {
+			$.post(DomainUri + '/ClientCon/ClientInfoUpdate', {
+				rn:   rn,
+				name: name,
+				type: type,
+				talk: talk,
+			}, function(data) {
+				var tmpArr    = JSON.parse(data);
+				var objResult = tmpArr.result;
+				// 성공 시
+				if (objResult === "t") {
+				pAlert('저장이 완료되었습니다.');
+
+				// 1) data-val 속성 갱신
+				$('.info_name')
+					.data('val', name)
+					.attr('data-val', name);
+				$('.info_talk')
+					.data('val', talk)
+					.attr('data-val', talk);
+
+				// 2) 상단 인사말 이름 갱신
+				$('.top_txt_box .title_txt b').text(name);
+
+				// 3) 상단 설명 문구 이름 갱신
+				$('.top_txt_box .info_txt').html(
+					'남기신 채팅 내용과 ' + name + '님의 정보는 사이트 방문자에게 실시간으로 공유되며, 관리자 페이지에 안전하게 저장됩니다.<br>' +
+					'채팅 기록은 취업 성공 시점까지 보관되며, 관리자 페이지에서 언제든 삭제하실 수 있습니다.'
+				);
+
+				} else {
+				pAlert(tmpArr.msg);
+				}
+			});
+			}
+		},
+		}
+	});
+	});
+
 
 	const socket = io.connect('{{ ChatIoUri }}', {
 		transports: ['polling'],  // 웹소켓보다 polling만 허용
@@ -594,12 +676,8 @@ $(document).ready(function(){
 	});
 
 	socket.on('connect', function() {
-		// 이미 바인딩된 적 있으면 되돌아가서 중복 방지
-		if (window.chatHandlersBound) return;
-		window.chatHandlersBound = true;
+		let lastSent = 0;
 
-
-		// 1) 전송 로직을 함수로 분리
 		function sendChat() {
 			var msg  = $.trim($('.send_input').val());
 			if (!msg) {
@@ -608,7 +686,7 @@ $(document).ready(function(){
 			if (!rn) {
 				return pAlert('잘못된 접근입니다. 새로고침 후 다시 시도해주세요');
 			}
-
+			pLoadingOn();
 			$.post(DomainUri + '/ClientCon/Chat', {
 				msg: msg,
 				rn:  rn
@@ -622,46 +700,35 @@ $(document).ready(function(){
 					$('.send_input').val('');
 				} else {
 					pAlert(tmpArr.msg);
+					pLoadingOff();
 				}
 			});
 		}
 
-		$('#chatForm')
-		.off('submit.chat')
-		.on ('submit.chat', function(e){
+		$('.send_btn').off('click').on('click', function(e){
 			e.preventDefault();
-			sendChat();
-		});
-
-		let isThrottled = false;
-
-		function throttledSendChat() {
-		if (isThrottled) return;
-		isThrottled = true;
-		setTimeout(() => {
-			sendChat();
-			isThrottled = false;
-		}, 300);
-		}
-
-		body
-		.off('click.sendChat', '.send_btn')
-		.on ('click.sendChat', '.send_btn', function(e){
-			e.preventDefault();
-			throttledSendChat();
-		});
-
-		body
-		.off('keyup.sendChat', '.send_input')
-		.on ('keyup.sendChat', '.send_input', function(e){
-			if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault();
-			throttledSendChat();
+			const now = Date.now();
+			if (now - lastSent > 500) {
+				sendChat();
+				lastSent = now;
 			}
 		});
 
+		$('.send_chat').off('keydown').on('keydown', function(e){
+			if (e.key === 'Enter' && !e.shiftKey) {
+				e.preventDefault();
+				const now = Date.now();
+				if (now - lastSent > 500) {
+				sendChat();
+				lastSent = now;
+				}
+			}
+		});
+
+
 		socket.on('LiveChat', function(payload) {
-			console.log('LiveChat', payload);
+			//console.log('LiveChat', payload);
+
 
 			// payload를 항상 배열로 처리
 			var clients = Array.isArray(payload) ? payload : [payload];
@@ -707,6 +774,7 @@ $(document).ready(function(){
 				$('.box_main').append(bubbleHtml)
 								.scrollTop($('.box_main').prop('scrollHeight'));
 				}
+				pLoadingOff();
 			});
 		});
 

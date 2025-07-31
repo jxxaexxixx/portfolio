@@ -25,4 +25,21 @@ class AutoAnswerMo extends \Core\Model
         $result = $Sel->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public static function GetAutoAnswerKeyword($data = null)
+    {
+        $manager_idx = $data['manager_idx'];
+        $db     = static::GetMainDB();
+        $dbName = self::MainDBName;
+        $Sel    = $db->prepare("SELECT
+            idx,
+            keyword
+        FROM $dbName.auto_answer
+        WHERE manager_idx = :manager_idx
+        ");
+        $Sel->bindValue(':manager_idx', $manager_idx, PDO::PARAM_STR);
+        $Sel->execute();
+        $result = $Sel->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }

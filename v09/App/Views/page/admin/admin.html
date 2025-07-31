@@ -648,7 +648,7 @@ body{
 				<div class="ad_chat_de_cont_chat_box">
 				</div>
 				<div class="ad_chat_de_cont_send_box">
-					<form id="chatForm">
+					<form id="chatForm" onsubmit="return false;">
 						<textarea class="send_chat" placeholder="유저에게 보낼 내용을 입력해주세요"></textarea>
 						<div class="chat_send_btn_box">
 							<button type="button" class="chat_send_btn p_btn">전송</button>
@@ -1084,11 +1084,8 @@ $(document).ready(function () {
 
 	// 연결 성공 시
 	socket.on('connect', function () {
-		// 이미 바인딩된 적 있으면 되돌아가서 중복 방지
-		if (window.chatHandlersBound) return;
-		window.chatHandlersBound = true;
+		let lastSent = 0;
 
-		// 1) 전송 로직을 함수로 분리
 		function sendChat() {
 			var msg  = $.trim($('.send_chat').val());
 			var rn   = $('.ad_chat_box_act').data('rn');
@@ -1108,7 +1105,6 @@ $(document).ready(function () {
 				var objData   = tmpArr.data;
 
 				if (objResult === "t") {
-					// 1) 소켓 전송
 					socket.emit('LiveChat', [{
 						type:             objData.type,
 						formattime:         objData.formattime,
@@ -1118,25 +1114,6 @@ $(document).ready(function () {
 						rn:               rn
 					}]);
 
-					// 2) 상세 채팅 말풍선 추가
-					var bubbleHtml = ''
-					+ '<div class="chat_admin_msg_box chat_msg_box">'
-					+   '<div class="chat_admin_timer_box">'
-					+     '<span class="chat_admin_timer_text">' + objData.formattime + '</span>'
-					+   '</div>'
-					+   '<div class="chat_admin_msg_sb_box">'
-					+     '<span class="chat_admin_msg_text">' + msg + '</span>'
-					+   '</div>'
-					+   '<div class="chat_admin_msg_img_box">'
-					+     '<img src="' + DomainUri + '/source/img/icons/man.png" '
-					+          'alt="유저 이미지" class="chat_admin_msg_img">'
-					+   '</div>'
-					+ '</div>';
-					var $chatBox = $('.ad_chat_de_cont_chat_box');
-					$chatBox.append(bubbleHtml)
-							.scrollTop($chatBox.prop('scrollHeight'));
-
-					// 3) 리스트 미리보기 업데이트
 					var $active = $('.ad_chat_box_act');
 					$active
 					.find('.ad_chat_ri_txt').text(msg).end()
@@ -1153,37 +1130,23 @@ $(document).ready(function () {
 			});
 		}
 
-		$('#chatForm')
-		.off('submit.chat')
-		.on ('submit.chat', function(e){
+		$('.chat_send_btn').off('click').on('click', function(e){
 			e.preventDefault();
-			sendChat();
+			const now = Date.now();
+			if (now - lastSent > 500) {
+				sendChat();
+				lastSent = now;
+			}
 		});
 
-		let isThrottled = false;
-
-		function throttledSendChat() {
-		if (isThrottled) return;
-		isThrottled = true;
-		setTimeout(() => {
-			sendChat();
-			isThrottled = false;
-		}, 300);
-		}
-
-		body
-		.off('click.sendChat', '.chat_send_btn')
-		.on ('click.sendChat', '.chat_send_btn', function(e){
-			e.preventDefault();
-			throttledSendChat();
-		});
-
-		body
-		.off('keyup.sendChat', '.send_chat')
-		.on ('keyup.sendChat', '.send_chat', function(e){
+		$('.send_chat').off('keydown').on('keydown', function(e){
 			if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault();
-			throttledSendChat();
+				e.preventDefault();
+				const now = Date.now();
+				if (now - lastSent > 500) {
+				sendChat();
+				lastSent = now;
+				}
 			}
 		});
 
